@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base{
+    @font-face {
+        font-family: 'gr';
+        src: url("/assets/GoogleSans-Regular.ttf");
+    }
+}
+
+
+.hide::-webkit-scrollbar{
+    display:none;
+}
