@@ -1,6 +1,52 @@
-import React from "react";
+import React, { useState } from "react";
+import { auth } from "../config/firebase";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import {
+  GoogleAuthProvider,
+  signInWithPopup,
+  onAuthStateChanged,
+  signInWithRedirect,
+  signOut,
+} from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
 const Hero = () => {
+  const navigate = useNavigate();
+  const [userInfo, setuserInfo] = useState("");
+
+  async function signInWithGoogle() {
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        toast("Logged In!");
+      } else {
+        const provider = new GoogleAuthProvider();
+        await signInWithPopup(auth, provider);
+        console.log(user);
+      }
+    });
+  }
+
+  async function signInWithGoogle2() {
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        setuserInfo({
+          displayName: user.displayName,
+          email: user.email,
+          photoURL: user.photoURL,
+          emailVerified: user.emailVerified,
+        });
+        navigate("/home");
+      } else {
+        toast("Log in first");
+      }
+    });
+  }
+
+  async function logOut() {
+    await signOut(auth);
+  }
+
   return (
     <>
       <div className="bg-white">
@@ -31,15 +77,22 @@ const Hero = () => {
                 className="h-[20px] w-[20px] absolute right-[15px] top-[17px] ml-[8px]"
               />
             </button>
-            <button className="py-[14px] px-[24px] rounded-[5px] mr-[16px] text-[#1a73e8] border font-gr text-[18px] ">
+            {/* <Link to={"/home"}> */}
+            <button
+              className="py-[14px] px-[24px] rounded-[5px] mr-[16px] text-[#1a73e8] border font-gr text-[18px] "
+              onClick={signInWithGoogle2}>
               Go to Drive
             </button>
+            <ToastContainer />
+            {/* </Link> */}
           </div>
           <div className="mt-[36px]">
             <span className="text-[#5f6368] font-gr text-[18px]">
               Don't have an account?
             </span>
-            <span className="text-[#1a73e8] font-gr text-[18px] ml-[8px] p-[14px] hover:bg-[#1a73e813] transition-all delay-75 cursor-pointer rounded-[5px]">
+            <span
+              className="text-[#1a73e8] font-gr text-[18px] ml-[8px] p-[14px] hover:bg-[#1a73e813] transition-all delay-75 cursor-pointer rounded-[5px]"
+              onClick={signInWithGoogle}>
               Sign up at no cost
             </span>
           </div>
