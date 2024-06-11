@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { auth } from "../config/firebase";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -6,14 +6,14 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   onAuthStateChanged,
-  signInWithRedirect,
   signOut,
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addProfile } from "../config/slices";
 
 const Hero = () => {
   const navigate = useNavigate();
-  const [userInfo, setuserInfo] = useState("");
 
   async function signInWithGoogle() {
     onAuthStateChanged(auth, async (user) => {
@@ -27,24 +27,24 @@ const Hero = () => {
     });
   }
 
+  const dispatch = useDispatch();
+
   async function signInWithGoogle2() {
     onAuthStateChanged(auth, async (user) => {
       if (user) {
-        setuserInfo({
-          displayName: user.displayName,
-          email: user.email,
-          photoURL: user.photoURL,
-          emailVerified: user.emailVerified,
-        });
+        dispatch(
+          addProfile({
+            displayName: user.displayName,
+            email: user.email,
+            photoURL: user.photoURL,
+            emailVerified: user.emailVerified,
+          })
+        );
         navigate("/home");
       } else {
         toast("Log in first");
       }
     });
-  }
-
-  async function logOut() {
-    await signOut(auth);
   }
 
   return (

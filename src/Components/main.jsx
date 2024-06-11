@@ -5,19 +5,39 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Hero from "./Hero";
 import Navbar from "./Navbar";
 import Drive from "./Drive";
+import Computer from "./Computers";
+import Shared from "./Shared";
+import { Provider } from "react-redux";
+import store from "../config/store";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Hero />,
+    element: (
+      <Provider store={store}>
+        <Hero />
+      </Provider>
+    ),
   },
   {
     path: "/home",
-    element: <Navbar />,
+    element: (
+      <Provider store={store}>
+        <Navbar />
+      </Provider>
+    ),
     children: [
       {
         path: "/home",
         element: <Drive />,
+      },
+      {
+        path: "/home/computer",
+        element: <Computer />,
+      },
+      {
+        path: "/home/shared",
+        element: <Shared />,
       },
     ],
   },
