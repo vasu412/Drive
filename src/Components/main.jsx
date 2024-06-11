@@ -9,6 +9,10 @@ import Computer from "./Computers";
 import Shared from "./Shared";
 import { Provider } from "react-redux";
 import store from "../config/store";
+import Trash from "./trash";
+import Spam from "./spam";
+import Recent from "./Recent";
+import Starred from "./Starred";
 
 const router = createBrowserRouter([
   {
@@ -38,6 +42,22 @@ const router = createBrowserRouter([
       {
         path: "/home/shared",
         element: <Shared />,
+      },
+      {
+        path: "/home/trash",
+        element: <Trash />,
+      },
+      {
+        path: "/home/spam",
+        element: <Spam />,
+      },
+      {
+        path: "/home/recent",
+        element: <Recent />,
+      },
+      {
+        path: "/home/starred",
+        element: <Starred />,
       },
     ],
   },

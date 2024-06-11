@@ -1,11 +1,11 @@
 import { useState } from "react";
-const Trash = () => {
+const Recent = () => {
   const [file2, setFile2] = useState(true);
 
   return (
     <>
       <h1 className="font-gr text-[24px] pl-[20px] pt-[17px] pb-[6px]">
-        Trash
+        Recent
       </h1>
 
       <div className="border-[#202124] border w-[110px] h-[30px] rounded-3xl flex cursor-pointer float-right absolute right-[80px] top-[80px]">
@@ -49,24 +49,18 @@ const Trash = () => {
       </div>
       <div className="flex flex-col items-center">
         <img
-          src="https://ssl.gstatic.com/docs/doclist/images/empty_state_trash_v4.svg"
+          src="https://ssl.gstatic.com/docs/doclist/images/empty_state_recents_v4.svg"
           alt=""
           className="h-[200px] w-[200px] mt-[140px]"
         />
         <h1 className="mt-[16px] mb-[8px] font-gr font-[300] text-[24px]">
-          Nothing in trash
+          No recent files
         </h1>
         <p className="font-[300] mx-[300px] text-center">
-          Move items you don't need to trash. Items in trash will be deleted
-          forever after 30 days.{" "}
+          See all the files you’ve recently edited or opened.{" "}
         </p>
-        <a
-          href="https://support.google.com/drive/answer/2375057?visit_id=638536361769983493-3865912668&p=swm_ww_new&rd=1"
-          className="text-[#1a73e8] mt-[10px]">
-          Learn More
-        </a>
       </div>
     </>
   );
 };
-export default Trash;
+export default Recent;
