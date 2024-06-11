@@ -1,45 +1,44 @@
 import React from "react";
-import { auth } from "../config/firebase";
+import { auth, db } from "../config/firebase";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
   GoogleAuthProvider,
   signInWithPopup,
   onAuthStateChanged,
-  signOut,
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { addProfile } from "../config/slices";
+import { addDoc, collection } from "firebase/firestore";
 
 const Hero = () => {
   const navigate = useNavigate();
+  const profile = collection(db, "profile");
+
+  const provider = new GoogleAuthProvider();
+  provider.setCustomParameters({
+    prompt: "select_account",
+  });
 
   async function signInWithGoogle() {
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         toast("Logged In!");
       } else {
-        const provider = new GoogleAuthProvider();
-        await signInWithPopup(auth, provider);
-        console.log(user);
+        const data = await signInWithPopup(auth, provider);
+        const user = data.user;
+        await addDoc(profile, {
+          displayName: user.displayName,
+          email: user.email,
+          photoURL: user.photoURL,
+          emailVerified: user.emailVerified,
+        });
       }
     });
   }
 
-  const dispatch = useDispatch();
-
   async function signInWithGoogle2() {
     onAuthStateChanged(auth, async (user) => {
       if (user) {
-        dispatch(
-          addProfile({
-            displayName: user.displayName,
-            email: user.email,
-            photoURL: user.photoURL,
-            emailVerified: user.emailVerified,
-          })
-        );
         navigate("/home");
       } else {
         toast("Log in first");
@@ -77,14 +76,13 @@ const Hero = () => {
                 className="h-[20px] w-[20px] absolute right-[15px] top-[17px] ml-[8px]"
               />
             </button>
-            {/* <Link to={"/home"}> */}
+
             <button
               className="py-[14px] px-[24px] rounded-[5px] mr-[16px] text-[#1a73e8] border font-gr text-[18px] "
               onClick={signInWithGoogle2}>
               Go to Drive
             </button>
             <ToastContainer />
-            {/* </Link> */}
           </div>
           <div className="mt-[36px]">
             <span className="text-[#5f6368] font-gr text-[18px]">

@@ -1,20 +1,43 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import NavLeft from "./NavLeft";
-import { Outlet } from "react-router-dom";
-import { Provider, useSelector } from "react-redux";
+import { Outlet, useNavigate } from "react-router-dom";
+import { Provider, useDispatch } from "react-redux";
 import store from "../config/store";
-import { auth } from "../config/firebase";
+import { auth, db } from "../config/firebase";
 import { signOut } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
+import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
+import { addProfile } from "../config/slices";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const profile = useSelector((store) => store.profile.profileVal);
+  const [profile, setProfile] = useState("");
+  const prof = collection(db, "profile");
   const [pro, setPro] = useState(false);
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    async function get() {
+      const data = await getDocs(prof);
+      const filtereData = data.docs.map((docs) => ({
+        ...docs.data(),
+        id: docs.id,
+      }));
+      setProfile(filtereData[0]);
+      dispatch(addProfile({ ...filtereData[0] }));
+    }
+    get();
+  }, []);
+
   async function logOut() {
-    await signOut(auth);
-    navigate("/");
+    try {
+      await signOut(auth);
+      await deleteDoc(doc(prof, profile.id));
+      navigate("/");
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
   }
+
   return (
     <>
       <Provider store={store}>
@@ -105,7 +128,7 @@ const Navbar = () => {
           </div>
 
           <NavLeft />
-          <div className="float-right bg-white w-[78.5vw] h-[91vh] rounded-2xl mr-[55px]">
+          <div className="float-right bg-white w-[78.5vw] h-[91vh] rounded-2xl mr-[55px] overflow-scroll">
             <Outlet />
           </div>
         </nav>

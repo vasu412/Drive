@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Data from "./Data";
+import { useSelector } from "react-redux";
 
 const Drive = () => {
   const [file, setFile] = useState(true);
@@ -157,7 +158,7 @@ const Drive = () => {
                 </div>
               </div>
               {driveData.map((x) => (
-                <Data x={x} />
+                <Data x={x} key={x.id} />
               ))}
             </div>
           )}

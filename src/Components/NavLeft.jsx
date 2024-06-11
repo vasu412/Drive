@@ -5,11 +5,16 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addState } from "../config/slices";
+import { ToastContainer, toast } from "react-toastify";
 
 const NavLeft = () => {
-  const [filesContent, setFilesContent] = useState("");
-  const [click, setClick] = useState(1);
   const driveData = collection(db, "driveData");
+  const dispatch = useDispatch();
+
+  const [fileURL, setFileURL] = useState("");
+  const [file, setFile] = useState("");
+  const [doc, setDoc] = useState(null);
+  const [check, setCheck] = useState(true);
 
   const handleButtonClick = async () => {
     document.getElementById("fileInput").click();
@@ -22,35 +27,60 @@ const NavLeft = () => {
     //     console.log(file);
     //   }
     // }
-
-    setClick((prev) => prev + 1);
   };
-
-  const dispatch = useDispatch();
 
   const handleFileChange = async (event) => {
-    const files = event.target.files;
-    console.log(files);
-    await addDoc(driveData, {
-      name: files[0].name,
-      size: files[0].size,
-      type: files[0].type,
-      lastModified: new Date(files[0].lastModified).toLocaleString(),
-    });
+    const file = event.target.files[0];
+    if (file) {
+      setFile(file);
+      const fileReader = new FileReader();
+      fileReader.onload = (e) => {
+        const fileBlob = new Blob([e.target.result], { type: file.type });
+        const url = URL.createObjectURL(fileBlob);
+        setFileURL(url);
+      };
+      if (file.type.startsWith("image/") || file.type.startsWith("text/")) {
+        fileReader.readAsDataURL(file); // For images and text files
+      } else {
+        fileReader.readAsArrayBuffer(file); // For other types (default)
+      }
+    }
   };
 
+  async function get() {
+    const data = await getDocs(driveData);
+    const filteredData = data.docs.map((docs) => ({
+      ...docs.data(),
+      id: docs.id,
+    }));
+    setDoc([...filteredData]);
+    dispatch(addState([...filteredData]));
+  }
+
   useEffect(() => {
-    async function get() {
-      const data = await getDocs(driveData);
-      const filtereData = data.docs.map((docs) => ({
-        ...docs.data(),
-        id: docs.id,
-      }));
-      setFilesContent(filtereData);
-      dispatch(addState([...filesContent]));
+    async function send() {
+      let count = 0;
+      if (doc) {
+        doc.map((x) => {
+          if (x.name !== file.name) count++;
+        });
+        console.log(doc.length, count);
+        doc.length === count &&
+          (await addDoc(driveData, {
+            name: file?.name,
+            size: file?.size,
+            type: file?.type || "",
+            lastModified: new Date(file?.lastModified).toLocaleString(),
+            url: fileURL || "",
+          }));
+      }
     }
+    send();
+  }, [doc, file]);
+
+  useEffect(() => {
     get();
-  }, [click]);
+  }, [file]);
 
   return (
     <div className="float-left w-[250px]  flex flex-col justify-center items-start px-[12px] pt-[10px]">
@@ -67,6 +97,7 @@ const NavLeft = () => {
             onChange={handleFileChange}
           />
         </button>
+        <ToastContainer />
         {/* <div className="bg-white w-[330px] h-[150px] absolute top-[70px] shadow-md rounded-lg none">
           <div></div>
           <div></div>
