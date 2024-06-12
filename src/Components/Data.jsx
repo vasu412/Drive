@@ -6,7 +6,6 @@ import pdf from "/assets/pdf.svg";
 import { useState } from "react";
 
 const Data = ({ x }) => {
-  // console.log(x);
   const profile = useSelector((store) => store.profile.profileVal);
   const [funcs, setFuncs] = useState(false);
 
@@ -28,7 +27,7 @@ const Data = ({ x }) => {
       <div className="w-[326px]  pr-[6px] text-ellipsis overflow-hidden whitespace-nowrap">
         {x.name}
       </div>
-      <div className="w-[215px]  px-[6px] flex">
+      <div className="w-[215px]  px-[6px] flex text-[#444746] text-[13px]">
         <img
           src={profile.photoURL}
           className="rounded-full h-[24px] w-[24px] mr-[8px]"
@@ -36,10 +35,14 @@ const Data = ({ x }) => {
         />
         me
       </div>
-      <div className="w-[200px]  px-[6px]">{x.lastModified.split(",")[0]}</div>
-      <div className="w-[82px]  px-[6px]">{Math.ceil(x.size / 1000)}KB</div>
+      <div className="w-[200px] text-[#444746] text-[13px] px-[6px]">
+        {x.lastModified}
+      </div>
+      <div className="w-[82px] text-[#444746]  text-[13px] px-[6px]">
+        {x.size}
+      </div>
       <div
-        className="w-[217px]  px-[6px] mr-[6px] text-end cursor-pointer flex justify-end items-end"
+        className="w-[217px]  px-[6px] mr-[6px] text-end cursor-pointer flex justify-end items-end text-[#444746] "
         onMouseOver={() => setFuncs(true)}
         onMouseLeave={() => setFuncs(false)}>
         {funcs && (
@@ -49,10 +52,10 @@ const Data = ({ x }) => {
                 person_add
               </i>
             </div>
-            <a href={x.url} download={x.name}>
+            <a href={x.url} target="blank">
               <div className="h-[40px] w-[40px] flex items-center justify-center  hover:bg-slate-200 rounded-full  transition-all delay-75">
                 <i className="material-symbols-outlined text-[18px] ">
-                  download
+                  open_in_new
                 </i>
               </div>
             </a>

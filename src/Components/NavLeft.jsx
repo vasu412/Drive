@@ -5,16 +5,16 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addState } from "../config/slices";
-import { ToastContainer, toast } from "react-toastify";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const NavLeft = () => {
   const driveData = collection(db, "driveData");
   const dispatch = useDispatch();
+  const storage = getStorage();
 
   const [fileURL, setFileURL] = useState("");
   const [file, setFile] = useState("");
   const [doc, setDoc] = useState(null);
-  const [check, setCheck] = useState(true);
 
   const handleButtonClick = async () => {
     document.getElementById("fileInput").click();
@@ -32,20 +32,36 @@ const NavLeft = () => {
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
     if (file) {
+      console.log(file);
       setFile(file);
-      const fileReader = new FileReader();
-      fileReader.onload = (e) => {
-        const fileBlob = new Blob([e.target.result], { type: file.type });
-        const url = URL.createObjectURL(fileBlob);
-        setFileURL(url);
-      };
-      if (file.type.startsWith("image/") || file.type.startsWith("text/")) {
-        fileReader.readAsDataURL(file); // For images and text files
-      } else {
-        fileReader.readAsArrayBuffer(file); // For other types (default)
-      }
+      const storedFile = ref(storage, file.name);
+      await uploadBytes(storedFile, file);
+      const url = await getDownloadURL(storedFile);
+      console.log(url);
+      setFileURL(url);
     }
   };
+
+  function formatDate(timestamp) {
+    const date = new Date(timestamp);
+    const options = { year: "numeric", month: "short", day: "2-digit" };
+    return date.toLocaleDateString("en-US", options);
+  }
+
+  function formatFileSize(bytes) {
+    const byt = "" + bytes;
+    const l = byt.length;
+    const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
+    if (bytes === 0) return "0 Byte";
+    else if (l <= 3) return bytes + " " + sizes[0];
+    else if (l > 3 && l < 7) return Math.floor(bytes / 1000) + " " + sizes[1];
+    else if (l >= 7 && l < 10)
+      return Math.floor(bytes / 1000000) + " " + sizes[2];
+    else if (l >= 10 && l < 13)
+      return Math.floor(bytes / 1000000000) + " " + sizes[3];
+    else if (l >= 13 && l < 16)
+      return Math.floor(bytes / 1000000000000) + " " + sizes[4];
+  }
 
   async function get() {
     const data = await getDocs(driveData);
@@ -64,23 +80,22 @@ const NavLeft = () => {
         doc.map((x) => {
           if (x.name !== file.name) count++;
         });
-        console.log(doc.length, count);
         doc.length === count &&
           (await addDoc(driveData, {
             name: file?.name,
-            size: file?.size,
+            size: formatFileSize(file?.size),
             type: file?.type || "",
-            lastModified: new Date(file?.lastModified).toLocaleString(),
-            url: fileURL || "",
+            lastModified: formatDate(file?.lastModified),
+            url: fileURL,
           }));
       }
     }
     send();
-  }, [doc, file]);
+  }, [fileURL]);
 
   useEffect(() => {
     get();
-  }, [file]);
+  }, [fileURL]);
 
   return (
     <div className="float-left w-[250px]  flex flex-col justify-center items-start px-[12px] pt-[10px]">
@@ -97,7 +112,6 @@ const NavLeft = () => {
             onChange={handleFileChange}
           />
         </button>
-        <ToastContainer />
         {/* <div className="bg-white w-[330px] h-[150px] absolute top-[70px] shadow-md rounded-lg none">
           <div></div>
           <div></div>

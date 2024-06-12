@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Data from "./Data";
+import Data2 from "./Data2";
 import { useSelector } from "react-redux";
 
 const Drive = () => {
@@ -144,7 +145,7 @@ const Drive = () => {
                 upload
               </p>
             </div>
-          ) : (
+          ) : file2 ? (
             <div className="flex flex-col mt-[18px] w-full pl-[20px] pr-[12px]">
               <div className="flex items-center text-start text-[14px] border-[#dadce0]  border-b">
                 <div className="w-[382px] h-[30px] pr-[6px] ">Name</div>
@@ -160,6 +161,15 @@ const Drive = () => {
               {driveData.map((x) => (
                 <Data x={x} key={x.id} />
               ))}
+            </div>
+          ) : (
+            <div className="pl-[20px] pt-[6px] pr-[12px]">
+              <h1 className="pt-[8px] pb-[16px] text-[14px] font-gr">Files</h1>
+              <div className="flex flex-wrap gap-[17px]">
+                {driveData.map((x) => (
+                  <Data2 x={x} key={x.id} />
+                ))}
+              </div>
             </div>
           )}
         </div>
