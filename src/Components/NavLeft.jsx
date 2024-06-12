@@ -89,6 +89,7 @@ const NavLeft = ({ setType, setOpen, setFileName, setLoading }) => {
             type: file?.type || "",
             lastModified: formatDate(file?.lastModified),
             url: fileURL,
+            isStarred: false,
           }));
 
         existingFile && toast("File Already Exists!!!");

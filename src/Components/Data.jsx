@@ -1,14 +1,31 @@
 import { useDispatch, useSelector } from "react-redux";
-import doc from "/assets/doc.svg";
+import docs from "/assets/doc.svg";
 import pic from "/assets/pic.svg";
 import movie from "/assets/movie.svg";
 import pdf from "/assets/pdf.svg";
 import { useState } from "react";
 import { addOption } from "../config/slices";
+import { db } from "../config/firebase";
+import { setDoc } from "firebase/firestore";
+import { collection, doc } from "firebase/firestore";
 
 const Data = ({ x, show, setShowIndex, setSelect, idx }) => {
   const profile = useSelector((store) => store.profile.profileVal);
   const [funcs, setFuncs] = useState(false);
+  const [star, setStar] = useState(x.isStarred);
+
+  const driveData = collection(db, "driveData");
+  const driveDocRef = doc(driveData, x.id);
+
+  async function send() {
+    await setDoc(driveDocRef, { isStarred: true }, { merge: true });
+    setStar(true);
+  }
+
+  async function remove() {
+    await setDoc(driveDocRef, { isStarred: false }, { merge: true });
+    setStar(false);
+  }
 
   const dispatch = useDispatch();
   let type =
@@ -17,7 +34,7 @@ const Data = ({ x, show, setShowIndex, setSelect, idx }) => {
       : x.type.split("/")[0] == "video"
       ? movie
       : x.type.split("/")[0] == "text"
-      ? doc
+      ? docs
       : pdf;
   return (
     <div
@@ -29,14 +46,16 @@ const Data = ({ x, show, setShowIndex, setSelect, idx }) => {
         setShowIndex(idx);
         setSelect(true);
         dispatch(addOption({ ...x }));
-        console.log(x);
       }}
       style={{ backgroundColor: show ? "#c2e7ff" : "" }}>
       <div className="w-[56px]  flex items-center justify-center">
         <img src={type} alt="" className="w-[22px] h-[22px]" />
       </div>
-      <div className="w-[326px]  pr-[6px] text-ellipsis overflow-hidden whitespace-nowrap">
-        {x.name}
+      <div className="w-[326px]  pr-[6px] flex items-center ">
+        <p className="text-ellipsis overflow-hidden whitespace-nowrap w-[280px]">
+          {x.name}
+        </p>
+        {star && <img src="/assets/st.png" alt="" className="h-[16px]" />}
       </div>
       <div className="w-[215px]  px-[6px] flex text-[#444746] text-[13px]">
         <img
@@ -70,8 +89,16 @@ const Data = ({ x, show, setShowIndex, setSelect, idx }) => {
             <div className="h-[40px] w-[40px] flex items-center justify-center  hover:bg-slate-200 rounded-full  transition-all delay-75">
               <i className="material-symbols-outlined text-[18px] ">edit</i>
             </div>
-            <div className="h-[40px] w-[40px] flex items-center justify-center  hover:bg-slate-200 rounded-full  transition-all delay-75">
-              <i className="material-symbols-outlined text-[18px] ">star</i>
+            <div
+              className="h-[40px] w-[40px] flex items-center justify-center  hover:bg-slate-200 rounded-full  transition-all delay-75"
+              onClick={() => {
+                star ? remove() : send();
+              }}>
+              {star ? (
+                <img src="/assets/st.png" alt="" className="h-[18px]" />
+              ) : (
+                <i className="material-symbols-outlined text-[18px] ">star</i>
+              )}
             </div>
           </>
         )}

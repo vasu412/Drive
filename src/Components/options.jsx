@@ -3,14 +3,11 @@ import { addDoc, collection, deleteDoc, doc } from "firebase/firestore";
 import { db } from "../config/firebase";
 
 const trashData = collection(db, "trash");
-const starred = collection(db, "starred");
 const driveData = collection(db, "driveData");
 
 const Options = ({ setSelect, setShowIndex }) => {
   const data = useSelector((store) => store.option.profileVal);
-  async function send() {
-    await addDoc(starred, data);
-  }
+
   async function trash() {
     await addDoc(trashData, data);
     await deleteDoc(doc(driveData, data.id));
@@ -45,9 +42,7 @@ const Options = ({ setSelect, setShowIndex }) => {
         <i className="material-symbols-outlined text-[20px] ">link</i>
       </div>
       <div className="h-[32px] w-[32px] flex items-center justify-center  hover:bg-slate-200 rounded-full  transition-all delay-75 cursor-pointer">
-        <i className="material-symbols-outlined text-[20px] " onClick={send}>
-          star
-        </i>
+        <i className="material-symbols-outlined text-[20px] ">more_vert</i>
       </div>
     </div>
   );
