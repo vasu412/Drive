@@ -3,8 +3,7 @@ import pic from "/assets/pic.svg";
 import movie from "/assets/movie.svg";
 import pdf from "/assets/pdf.svg";
 
-const Data2 = ({ x }) => {
-  console.log(x.url);
+const Data2 = ({ x, show, setShowIndex, setSelect, idx }) => {
   let type = x.type.startsWith("image/")
     ? pic
     : x.type.startsWith("video/")
@@ -16,7 +15,13 @@ const Data2 = ({ x }) => {
   var img = new Image();
   img.src = x.url;
   return (
-    <div className="w-[260px] h-[260px] rounded-xl bg-[#f0f4f9] hover:bg-slate-200">
+    <div
+      className="w-[260px] h-[260px] rounded-xl bg-[#f0f4f9] hover:bg-slate-200 cursor-pointer"
+      onClick={() => {
+        setShowIndex(idx);
+        setSelect(true);
+      }}
+      style={{ backgroundColor: show ? "#c2e7ff" : "" }}>
       <div className="h-[48px] flex items-center justify-between">
         <img src={type} alt="" className="w-[20px] h-[20px] ml-[16px]" />
         <div className=" text-ellipsis overflow-hidden whitespace-nowrap w-[120px] py-[10px] px-[12px] text-[14px]">

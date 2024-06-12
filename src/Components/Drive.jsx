@@ -2,10 +2,15 @@ import { useState } from "react";
 import Data from "./Data";
 import Data2 from "./Data2";
 import { useSelector } from "react-redux";
+import FileType from "./FileType";
+import Options from "./options";
 
 const Drive = () => {
   const [file, setFile] = useState(true);
   const [file2, setFile2] = useState(true);
+  const [folders, setFolders] = useState(false);
+  const [select, setSelect] = useState(false);
+  const [showIndex, setShowIndex] = useState(null);
 
   const driveData = useSelector((store) => store.states.stateVal);
 
@@ -17,7 +22,7 @@ const Drive = () => {
           <div className="relative">
             <input
               type="text"
-              className="h-[52px] w-[830px] rounded-3xl font-gr text-[#202124] pl-[50px] bg-slate-100 placeholder-black"
+              className="h-[52px] w-[830px] rounded-3xl font-gr text-[#202124] pl-[50px] bg-slate-100 placeholder-black outline-none"
               placeholder="Search in Drive"
             />
             <i className="material-icons absolute left-[17px] top-[14px] ">
@@ -65,72 +70,18 @@ const Drive = () => {
               </i>
             </button>
           </div>
-          <div className="flex justify-between w-full mt-[17px] px-[20px]">
-            <div className="flex items-center">
-              <h1 className="mr-[15px] font-gr">Suggested</h1>
-
-              <div className="border-[#202124] border w-[195px] h-[32px] rounded-3xl flex cursor-pointer">
-                <div
-                  className="flex items-center justify-center px-[21px] rounded-l-3xl"
-                  style={{ backgroundColor: file ? "#c2e7ff" : "transparent" }}
-                  onClick={() => setFile(true)}>
-                  {file ? (
-                    <i className="material-symbols-outlined text-[18px] mr-[8px]">
-                      check
-                    </i>
-                  ) : (
-                    <i className="material-symbols-outlined text-[18px] mr-[8px]">
-                      clarify
-                    </i>
-                  )}
-                  <p className="text-[14px] font-gr">Files</p>
-                </div>
-                <div className="h-full  border-[#202124] border-r"></div>
-                <div
-                  className="flex items-center justify-center px-[12px] rounded-r-3xl"
-                  style={{ backgroundColor: file ? "transparent" : "#c2e7ff" }}
-                  onClick={() => setFile(false)}>
-                  {file ? (
-                    <i className="material-symbols-outlined text-[18px] mr-[8px]">
-                      folder
-                    </i>
-                  ) : (
-                    <i className="material-symbols-outlined text-[18px] mr-[8px]">
-                      check
-                    </i>
-                  )}
-
-                  <p className="text-[14px] font-gr">Folders</p>
-                </div>
-              </div>
-            </div>
-            <div className="border-[#202124] border w-[110px] h-[30px] rounded-3xl flex cursor-pointer">
-              <div
-                className="flex items-center w-[55px] justify-center rounded-l-2xl"
-                style={{ backgroundColor: file2 ? "#c2e7ff" : "transparent" }}
-                onClick={() => setFile2(true)}>
-                {file2 && (
-                  <i className="material-symbols-outlined text-[18px]">check</i>
-                )}
-                <i className="material-symbols-outlined text-[21px]">menu</i>
-              </div>
-              <div className="h-full  border-[#202124] border-r"></div>
-              <div
-                className="flex items-center w-[55px] justify-center rounded-r-2xl"
-                style={{ backgroundColor: file2 ? "transparent" : "#c2e7ff" }}
-                onClick={() => setFile2(false)}>
-                {file2 ? (
-                  ""
-                ) : (
-                  <i className="material-symbols-outlined text-[18px]">check</i>
-                )}
-                <i className="material-symbols-outlined text-[18px]">
-                  view_cozy
-                </i>
-              </div>
-            </div>
-          </div>
-          {driveData.length === 0 ? (
+          {!select ? (
+            <FileType
+              setFile={setFile}
+              setFile2={setFile2}
+              setFolders={setFolders}
+              file={file}
+              file2={file2}
+            />
+          ) : (
+            <Options setSelect={setSelect} setShowIndex={setShowIndex} />
+          )}
+          {driveData.length === 0 || (!file && folders) ? (
             <div className="flex flex-col items-center">
               <img
                 src="https://ssl.gstatic.com/docs/doclist/images/empty_state_home.svg"
@@ -158,16 +109,30 @@ const Drive = () => {
                   </i>
                 </div>
               </div>
-              {driveData.map((x) => (
-                <Data x={x} key={x.id} />
+              {driveData.map((x, idx) => (
+                <Data
+                  x={x}
+                  key={x.id}
+                  show={idx === showIndex ? true : false}
+                  setShowIndex={setShowIndex}
+                  setSelect={setSelect}
+                  idx={idx}
+                />
               ))}
             </div>
           ) : (
             <div className="pl-[20px] pt-[6px] pr-[12px]">
               <h1 className="pt-[8px] pb-[16px] text-[14px] font-gr">Files</h1>
               <div className="flex flex-wrap gap-[17px]">
-                {driveData.map((x) => (
-                  <Data2 x={x} key={x.id} />
+                {driveData.map((x, idx) => (
+                  <Data2
+                    x={x}
+                    key={x.id}
+                    show={idx === showIndex ? true : false}
+                    setShowIndex={setShowIndex}
+                    setSelect={setSelect}
+                    idx={idx}
+                  />
                 ))}
               </div>
             </div>

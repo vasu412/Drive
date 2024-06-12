@@ -25,7 +25,20 @@ export const profile = createSlice({
   },
 });
 
+export const option = createSlice({
+  name: "optionData",
+  initialState: {
+    profileVal: {},
+  },
+  reducers: {
+    addOption: (state, action) => {
+      state.profileVal = action.payload;
+    },
+  },
+});
+
 export const { addState } = states.actions;
 export const { addProfile } = profile.actions;
+export const { addOption } = option.actions;
 
 export default states.reducer;
