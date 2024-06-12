@@ -7,12 +7,30 @@ import { auth, db } from "../config/firebase";
 import { signOut } from "firebase/auth";
 import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
 import { addProfile } from "../config/slices";
+import docs from "/assets/doc.svg";
+import pic from "/assets/pic.svg";
+import movie from "/assets/movie.svg";
+import pdf from "/assets/pdf.svg";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const [profile, setProfile] = useState("");
   const prof = collection(db, "profile");
   const [pro, setPro] = useState(false);
+
+  const [types, setType] = useState("");
+  const [open, setOpen] = useState(false);
+  const [fileName, setFileName] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  let type =
+    types == "image"
+      ? pic
+      : types == "video"
+      ? movie
+      : types == "text"
+      ? docs
+      : pdf;
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -127,10 +145,55 @@ const Navbar = () => {
             </div>
           </div>
 
-          <NavLeft />
+          <NavLeft
+            setFileName={setFileName}
+            setOpen={setOpen}
+            setLoading={setLoading}
+            setType={setType}
+          />
           <div className="float-right bg-white w-[78.5vw] h-[91vh] rounded-2xl mr-[55px] overflow-scroll">
             <Outlet />
           </div>
+
+          {open && (
+            <div className="w-[360px] bg-[#f8fafd] absolute bottom-0 right-[25px] shadow-xl border rounded-t-2xl">
+              <div className="w-full h-[54px] flex items-center justify-between">
+                <p className="pl-[17px] font-gr">
+                  {loading ? "Uploading Item" : "Upload Complete"}
+                </p>
+                <div
+                  className="h-[40px] w-[40px] flex items-center justify-center  hover:bg-slate-200 rounded-full  transition-all delay-75 mr-[4px] cursor-pointer"
+                  onClick={() => setOpen(false)}>
+                  <i className="material-symbols-outlined text-[22px] ">
+                    close
+                  </i>
+                </div>
+              </div>
+              <div className="h-[51px] flex items-center justify-between bg-white">
+                <div className="mr-[25px] flex items-center">
+                  <img
+                    src={type}
+                    alt=""
+                    className="w-[20px] h-[20px] ml-[16px]"
+                  />
+                  <div className=" text-ellipsis overflow-hidden whitespace-nowrap w-[120px] py-[10px] px-[12px] text-[14px]">
+                    {fileName}
+                  </div>
+                </div>
+                <div className="mr-[10px]">
+                  {loading ? (
+                    <img
+                      src="/assets/circular-arrows.png"
+                      alt=""
+                      className="animate-spin h-[20px]"
+                    />
+                  ) : (
+                    <img src="/assets/accept.png" alt="" className="h-[20px]" />
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
         </nav>
       </Provider>
     </>

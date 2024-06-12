@@ -6,8 +6,9 @@ import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addState } from "../config/slices";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { ToastContainer, toast } from "react-toastify";
 
-const NavLeft = () => {
+const NavLeft = ({ setType, setOpen, setFileName, setLoading }) => {
   const driveData = collection(db, "driveData");
   const dispatch = useDispatch();
   const storage = getStorage();
@@ -34,11 +35,15 @@ const NavLeft = () => {
     if (file) {
       console.log(file);
       setFile(file);
+      setOpen(true);
+      setFileName(file.name);
+      setType(file.type.split("/")[0]);
       const storedFile = ref(storage, file.name);
       await uploadBytes(storedFile, file);
       const url = await getDownloadURL(storedFile);
       console.log(url);
       setFileURL(url);
+      setLoading(false);
     }
   };
 
@@ -75,12 +80,9 @@ const NavLeft = () => {
 
   useEffect(() => {
     async function send() {
-      let count = 0;
       if (doc) {
-        doc.map((x) => {
-          if (x.name !== file.name) count++;
-        });
-        doc.length === count &&
+        const existingFile = doc.find((x) => x.name === file.name);
+        !existingFile &&
           (await addDoc(driveData, {
             name: file?.name,
             size: formatFileSize(file?.size),
@@ -88,6 +90,8 @@ const NavLeft = () => {
             lastModified: formatDate(file?.lastModified),
             url: fileURL,
           }));
+
+        existingFile && toast("File Already Exists!!!");
       }
     }
     send();
@@ -140,7 +144,7 @@ const NavLeft = () => {
             </div>
           </Link>
           <br />
-
+          <ToastContainer />
           <Link to={"/home/shared"}>
             <div className="flex  justify-start items-center w-[220px] px-[20px] rounded-3xl py-[5.5px] hover:bg-slate-200 cursor-pointer">
               <img
