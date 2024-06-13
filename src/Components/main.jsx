@@ -14,6 +14,7 @@ import Spam from "./spam";
 import Recent from "./Recent";
 import Starred from "./Starred";
 import Search from "./search";
+import AI from "./AI";
 
 const router = createBrowserRouter([
   {
@@ -21,6 +22,14 @@ const router = createBrowserRouter([
     element: (
       <Provider store={store}>
         <Hero />
+      </Provider>
+    ),
+  },
+  {
+    path: "/ai",
+    element: (
+      <Provider store={store}>
+        <AI />
       </Provider>
     ),
   },

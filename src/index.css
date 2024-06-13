@@ -36,3 +36,20 @@
     transition: all 5s ease;
   }
   
+  .text{
+    background: linear-gradient(74deg, 
+    #4285f4 0%, 
+    #9b72cb 9%, 
+    #d96570 20%, 
+    #d96570 24%, 
+    #9b72cb 35%, 
+    #4285f4 44%, 
+    #9b72cb 50%, 
+    #d96570 56%, 
+    #ffffff 75%, 
+    #ffffff 100%
+);
+-webkit-text-fill-color: transparent; 
+            -webkit-background-clip: text;
+        font-weight: 500;
+  }
