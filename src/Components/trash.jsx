@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { db } from "../config/firebase";
-import { getDocs, collection } from "firebase/firestore";
+import { getDocs, collection, deleteDoc, doc } from "firebase/firestore";
 import Data3 from "./data3";
 import Data2 from "./Data2";
 import Options from "./options";
@@ -20,6 +20,17 @@ const Trash = () => {
     }));
     setData([...filteredData]);
   }
+
+  const emptyTrash = async () => {
+    for (const item of data) {
+      try {
+        await deleteDoc(doc(trashData, item.id));
+      } catch (error) {
+        console.error(`Failed to delete document with ID: ${item.id}`, error);
+      }
+    }
+    get();
+  };
 
   useEffect(() => {
     get();
@@ -76,8 +87,13 @@ const Trash = () => {
           <Options setSelect={setSelect} setShowIndex={setShowIndex} />
         </div>
       )}
-      <div className="ml-[20px] mr-[7px] mt-[14px] px-[15px] py-[13px]  text-[13px] text-[#3c4043] bg-[#e3e5e6] rounded-lg">
-        Items in trash will be deleted forever after 30 days
+      <div className="ml-[20px] mr-[7px] mt-[14px] px-[15px] py-[13px]  text-[13px] text-[#3c4043] bg-[#e3e5e6] rounded-lg justify-between flex relative">
+        <p>Items in trash will be deleted forever after 30 days</p>
+        <div
+          className="cursor-pointer w-[100px] h-[30px] flex justify-center items-center text-center absolute  right-[10px] top-[7px] rounded-3xl hover:bg-[#c7c7c8]"
+          onClick={emptyTrash}>
+          <p>Empty Trash</p>
+        </div>
       </div>
       {data === "" || data.length === 0 ? (
         <div className="flex flex-col items-center">
@@ -119,7 +135,7 @@ const Trash = () => {
         <div className="pl-[20px] pt-[6px] pr-[12px]">
           <h1 className="pt-[8px] pb-[16px] text-[14px] font-gr">Files</h1>
           <div className="flex flex-wrap gap-[17px]">
-            {driveData.map((x, idx) => (
+            {data.map((x, idx) => (
               <Data2
                 x={x}
                 key={x.id}

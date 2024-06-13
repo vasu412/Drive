@@ -49,9 +49,22 @@ export const simpleState = createSlice({
   },
 });
 
+export const search = createSlice({
+  name: "search",
+  initialState: {
+    filteredData: [],
+  },
+  reducers: {
+    filter: (state, action) => {
+      state.filteredData = action.payload;
+    },
+  },
+});
+
 export const { addState } = states.actions;
 export const { addProfile } = profile.actions;
 export const { addOption } = option.actions;
 export const { add } = simpleState.actions;
+export const { filter } = search.actions;
 
 export default states.reducer;

@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from "react";
 import NavLeft from "./NavLeft";
 import { Outlet, useNavigate } from "react-router-dom";
-import { Provider, useDispatch } from "react-redux";
+import { Provider, useDispatch, useSelector } from "react-redux";
 import store from "../config/store";
 import { auth, db } from "../config/firebase";
 import { signOut } from "firebase/auth";
 import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
-import { addProfile } from "../config/slices";
+import { addProfile, filter } from "../config/slices";
 import docs from "/assets/doc.svg";
 import pic from "/assets/pic.svg";
 import movie from "/assets/movie.svg";
 import pdf from "/assets/pdf.svg";
+import Info from "./info";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -22,6 +23,8 @@ const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [fileName, setFileName] = useState("");
   const [loading, setLoading] = useState(true);
+  const [check, setCheck] = useState(true);
+  const [day, setDay] = useState(true);
 
   let type =
     types == "image"
@@ -56,43 +59,80 @@ const Navbar = () => {
     }
   }
 
+  const driveData = useSelector((store) => store.states.stateVal);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const filteredData = driveData.filter((x) => {
+      return x.name.toLowerCase().includes(e.target[0].value.toLowerCase());
+    });
+    dispatch(filter([...filteredData]));
+    navigate("/home/search");
+  };
+
   return (
     <>
       <Provider store={store}>
-        <nav className="bg-[#f0f4f9] shadow h-[100vh] w-full">
+        <nav
+          className="bg-[#f0f4f9] shadow h-[100vh] w-full"
+          style={{
+            backgroundColor: day ? "#f0f4f9" : "#1b1b1b",
+            color: day ? "black" : "#fff",
+          }}>
           <div className="flex px-[25px] items-center justify-between h-[60px]">
             <div className="flex items-center">
               <img src="/assets/google-drive.png" alt="" className="h-[40px]" />
-              <h1 className="font-gr text-[21px] ml-[8px] text-[#202124]">
+              <h1
+                className="font-gr text-[21px] ml-[8px]"
+                style={{
+                  color: day ? "#202124" : "#c4c7c5",
+                }}>
                 Drive
               </h1>
             </div>
-            <div className="relative mr-[180px] hidden">
-              <input
-                type="text"
-                className="h-[47px] w-[720px] rounded-3xl font-gr text-[#202124] pl-[50px] bg-slate-200 placeholder-black"
-                placeholder="Search in Drive"
-              />
-              <i className="material-icons absolute left-[17px] top-[13px] ">
-                search
-              </i>
-              <i className="material-icons absolute right-[17px] top-[13px] ">
-                tune
-              </i>
-            </div>
+            {check && (
+              <div
+                className="relative mr-[180px]"
+                style={{ color: day ? "black" : "#e3e3e3" }}>
+                <form action="" onSubmit={handleSubmit}>
+                  <input
+                    type="text"
+                    className="h-[47px] w-[720px] rounded-3xl font-gr text-[#202124] pl-[50px] bg-slate-200 placeholder-black outline-none"
+                    placeholder="Search in Drive"
+                    style={{
+                      backgroundColor: day ? "#fff" : "#282a2c",
+                      color: day ? "black" : "#e3e3e3",
+                    }}
+                  />
+                  <i className="material-icons absolute left-[17px] top-[13px] ">
+                    search
+                  </i>
+                  <i className="material-icons absolute right-[17px] top-[13px] ">
+                    tune
+                  </i>
+                </form>
+              </div>
+            )}
             <div className="flex items-center justify-between w-[130px]">
               <div className="h-[40px] w-[60px] flex items-center justify-center hover:bg-slate-200 rounded-full">
                 <img src="/assets/q.png" alt="Support" className="h-[22px]" />
               </div>
-              <div className="h-[40px] w-[60px] flex items-center justify-center  hover:bg-slate-200 rounded-full">
-                <img
-                  src="/assets/setting1.png"
-                  alt="Setting"
-                  className="h-[22px]"
-                />
+              <div className="h-[40px] w-[60px] flex items-center justify-center  hover:bg-slate-200 rounded-full cursor-pointer">
+                {day ? (
+                  <i
+                    className="material-symbols-outlined text-[23px] "
+                    onClick={() => setDay(false)}>
+                    light_mode
+                  </i>
+                ) : (
+                  <i
+                    className="material-symbols-outlined text-[23px] mb-[5px]"
+                    onClick={() => setDay(true)}>
+                    nights_stay
+                  </i>
+                )}
               </div>
               <div
-                className="h-[40px] w-[60px] flex items-center justify-center  hover:bg-slate-200 rounded-full "
+                className="h-[40px] w-[60px] flex items-center justify-center  hover:bg-slate-200 rounded-full cursor-pointer"
                 onClick={() => setPro(true)}>
                 <img
                   src={profile.photoURL}
@@ -150,49 +190,27 @@ const Navbar = () => {
             setOpen={setOpen}
             setLoading={setLoading}
             setType={setType}
+            setCheck={setCheck}
+            check={check}
+            day={day}
           />
-          <div className="float-right bg-white w-[78.5vw] h-[91vh] rounded-2xl mr-[55px] overflow-scroll">
+          <div
+            className="float-right bg-white w-[78.5vw] h-[91vh] rounded-2xl mr-[55px] overflow-scroll"
+            style={{
+              backgroundColor: day ? "#fff" : "#131314",
+              color: day ? "black" : "#fff",
+            }}>
             <Outlet />
           </div>
 
           {open && (
-            <div className="w-[360px] bg-[#f8fafd] absolute bottom-0 right-[25px] shadow-xl border rounded-t-2xl">
-              <div className="w-full h-[54px] flex items-center justify-between">
-                <p className="pl-[17px] font-gr">
-                  {loading ? "Uploading Item" : "Upload Complete"}
-                </p>
-                <div
-                  className="h-[40px] w-[40px] flex items-center justify-center  hover:bg-slate-200 rounded-full  transition-all delay-75 mr-[4px] cursor-pointer"
-                  onClick={() => setOpen(false)}>
-                  <i className="material-symbols-outlined text-[22px] ">
-                    close
-                  </i>
-                </div>
-              </div>
-              <div className="h-[51px] flex items-center justify-between bg-white">
-                <div className="mr-[25px] flex items-center">
-                  <img
-                    src={type}
-                    alt=""
-                    className="w-[20px] h-[20px] ml-[16px]"
-                  />
-                  <div className=" text-ellipsis overflow-hidden whitespace-nowrap w-[120px] py-[10px] px-[12px] text-[14px]">
-                    {fileName}
-                  </div>
-                </div>
-                <div className="mr-[10px]">
-                  {loading ? (
-                    <img
-                      src="/assets/circular-arrows.png"
-                      alt=""
-                      className="animate-spin h-[20px]"
-                    />
-                  ) : (
-                    <img src="/assets/accept.png" alt="" className="h-[20px]" />
-                  )}
-                </div>
-              </div>
-            </div>
+            <Info
+              day={day}
+              fileName={fileName}
+              loading={loading}
+              type={type}
+              setOpen={setOpen}
+            />
           )}
         </nav>
       </Provider>

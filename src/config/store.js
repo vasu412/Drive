@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import statesReducer, { option, profile, simpleState } from "./slices";
+import statesReducer, { option, profile, search, simpleState } from "./slices";
 
 const store = configureStore({
   reducer: {
@@ -7,6 +7,7 @@ const store = configureStore({
     profile: profile.reducer,
     option: option.reducer,
     simpleState: simpleState.reducer,
+    search: search.reducer,
   },
 });
 

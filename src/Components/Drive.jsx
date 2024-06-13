@@ -1,10 +1,12 @@
 import { useState } from "react";
 import Data from "./Data";
 import Data2 from "./Data2";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import FileType from "./FileType";
 import Options from "./options";
 import Notification from "./Notification";
+import { useNavigate } from "react-router-dom";
+import { filter } from "../config/slices";
 
 const Drive = () => {
   const [file, setFile] = useState(true);
@@ -16,6 +18,17 @@ const Drive = () => {
   const [message, setMessage] = useState("");
 
   const driveData = useSelector((store) => store.states.stateVal);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const filteredData = driveData.filter((x) => {
+      return x.name.toLowerCase().includes(e.target[0].value.toLowerCase());
+    });
+    dispatch(filter([...filteredData]));
+    navigate("/home/search");
+  };
 
   return (
     <>
@@ -23,14 +36,16 @@ const Drive = () => {
         <div className="flex flex-col justify-center items-center ">
           <h1 className="font-gr text-[25px] my-[20px]">Welcome to Drive</h1>
           <div className="relative">
-            <input
-              type="text"
-              className="h-[52px] w-[830px] rounded-3xl font-gr text-[#202124] pl-[50px] bg-slate-100 placeholder-black outline-none"
-              placeholder="Search in Drive"
-            />
-            <i className="material-icons absolute left-[17px] top-[14px] ">
-              search
-            </i>
+            <form action="" onSubmit={handleSubmit}>
+              <input
+                type="text"
+                className="h-[52px] w-[830px] rounded-3xl font-gr text-[#202124] pl-[50px] bg-slate-100 placeholder-black outline-none"
+                placeholder="Search in Drive"
+              />
+              <i className="material-icons absolute left-[17px] top-[14px] ">
+                search
+              </i>
+            </form>
           </div>
           <div className="flex items-center my-[20px]">
             <button className=" bg-slate-100 text-black py-[7px] px-[45px] pr-[38px] rounded-2xl mr-[16px]  text-[14px] relative font-gr hover:bg-slate-200">

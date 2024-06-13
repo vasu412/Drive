@@ -1,37 +1,21 @@
-import { useState, useEffect } from "react";
-import { db } from "../config/firebase";
-import { getDocs, collection } from "firebase/firestore";
-import Data from "./Data";
-import Options from "./options";
-import Data2 from "./Data2";
+import { useState } from "react";
 import Data3 from "./data3";
+import Data2 from "./Data2";
+import Options from "./options";
+import { useSelector } from "react-redux";
 
-const Starred = () => {
+const Search = () => {
   const [file2, setFile2] = useState(true);
-  const [data, setData] = useState("");
   const [select, setSelect] = useState(false);
   const [showIndex, setShowIndex] = useState(null);
 
-  const starred = collection(db, "driveData");
-
-  async function get() {
-    const data = await getDocs(starred);
-    const filteredData = data.docs.map((docs) => ({
-      ...docs.data(),
-      id: docs.id,
-    }));
-    const fData = filteredData.filter((x) => x.isStarred === true);
-    setData([...fData]);
-  }
-
-  useEffect(() => {
-    get();
-  }, []);
+  const filteredData = useSelector((store) => store.search.filteredData);
+  console.log(filteredData);
 
   return (
     <>
       <h1 className="font-gr text-[24px] pl-[20px] pt-[17px] pb-[6px]">
-        Starred
+        Search results
       </h1>
 
       <div className="border-[#202124] border w-[110px] h-[30px] rounded-3xl flex cursor-pointer float-right absolute right-[80px] top-[80px]">
@@ -79,22 +63,23 @@ const Starred = () => {
           <Options setSelect={setSelect} setShowIndex={setShowIndex} />
         </div>
       )}
-      {data === "" || data.length === 0 ? (
+      {filteredData === "" || filteredData.length === 0 ? (
         <div className="flex flex-col items-center">
           <img
-            src="https://ssl.gstatic.com/docs/doclist/images/empty_state_starred_files_v3.svg"
+            src="https://ssl.gstatic.com/docs/doclist/images/empty_state_no_search_results_v6.svg"
             alt=""
             className="h-[200px] w-[200px] mt-[140px]"
           />
           <h1 className="mt-[16px] mb-[8px] font-gr font-[300] text-[24px]">
-            No starred files
+            No matching results
           </h1>
           <p className="font-[300] mx-[300px] text-center">
-            Add stars to things that you want to easily find later{" "}
+            Try another search, or use search options to find a file by type,
+            owner, and more.{" "}
           </p>
         </div>
       ) : file2 ? (
-        <div className="flex flex-col mt-[26px] w-full pl-[20px] pr-[12px]">
+        <div className="flex flex-col mt-[18px] w-full pl-[20px] pr-[12px]">
           <div className="flex items-center text-start text-[14px] border-[#dadce0]  border-b">
             <div className="w-[517px] h-[30px] pr-[6px] ">Name</div>
             <div className="w-[140px] h-[30px] px-[6px]">Owner</div>
@@ -105,22 +90,15 @@ const Starred = () => {
               <i className="material-symbols-outlined text-[18px]">more_vert</i>
             </div>
           </div>
-          {data.map((x, idx) => (
-            <Data3
-              x={x}
-              key={x.id}
-              idx={idx}
-              show={idx === showIndex ? true : false}
-              setShowIndex={setShowIndex}
-              setSelect={setSelect}
-            />
+          {filteredData.map((x, idx) => (
+            <Data3 x={x} key={x.id} idx={idx} />
           ))}
         </div>
       ) : (
-        <div className="pl-[20px] pt-[6px] pr-[12px] mt-[10px]">
+        <div className="pl-[20px] pt-[6px] pr-[12px]">
           <h1 className="pt-[8px] pb-[16px] text-[14px] font-gr">Files</h1>
           <div className="flex flex-wrap gap-[17px]">
-            {data.map((x, idx) => (
+            {filteredData.map((x, idx) => (
               <Data2
                 x={x}
                 key={x.id}
@@ -136,4 +114,4 @@ const Starred = () => {
     </>
   );
 };
-export default Starred;
+export default Search;

@@ -8,7 +8,15 @@ import { addState } from "../config/slices";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { ToastContainer, toast } from "react-toastify";
 
-const NavLeft = ({ setType, setOpen, setFileName, setLoading }) => {
+const NavLeft = ({
+  setType,
+  setOpen,
+  setFileName,
+  setLoading,
+  setCheck,
+  check,
+  day,
+}) => {
   const driveData = collection(db, "driveData");
   const dispatch = useDispatch();
   const storage = getStorage();
@@ -31,7 +39,6 @@ const NavLeft = ({ setType, setOpen, setFileName, setLoading }) => {
   };
 
   const state = useSelector((store) => store.simpleState.count);
-  console.log(state);
 
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
@@ -103,16 +110,22 @@ const NavLeft = ({ setType, setOpen, setFileName, setLoading }) => {
 
   useEffect(() => {
     get();
-    console.log("checking");
-    console.log(state);
   }, [fileURL, state]);
 
   return (
-    <div className="float-left w-[250px]  flex flex-col justify-center items-start px-[12px] pt-[10px]">
+    <div
+      className="float-left w-[250px]  flex flex-col justify-center items-start px-[12px] pt-[10px]"
+      style={{
+        color: day ? "black" : "#e3e3e3",
+      }}>
       <div>
         <button
           className="w-[105px] bg-[#fff] text-[15px] flex items-center justify-center  shadow-md rounded-2xl py-[2.5px] relative"
-          onClick={(e) => handleButtonClick(e)}>
+          onClick={(e) => handleButtonClick(e)}
+          style={{
+            backgroundColor: day ? "#fff" : "#37393b",
+            color: day ? "black" : "#e3e3e3",
+          }}>
           <span className="text-[30px] font-[300] mb-[4px]">+</span>
           <span className="ml-[13px] text-[14px]">New</span>
           <input
@@ -131,7 +144,9 @@ const NavLeft = ({ setType, setOpen, setFileName, setLoading }) => {
       <div className="mt-[20px]">
         <div>
           <Link to={"/home"}>
-            <div className="flex  justify-start items-center w-[220px] px-[20px] rounded-3xl py-[5.5px] hover:bg-slate-200 cursor-pointer">
+            <div
+              className="flex  justify-start items-center w-[220px] px-[20px] rounded-3xl py-[5.5px] hover:bg-slate-200 cursor-pointer"
+              onClick={() => setCheck(false)}>
               <img
                 src="/assets/gd.png"
                 alt=""
@@ -142,7 +157,9 @@ const NavLeft = ({ setType, setOpen, setFileName, setLoading }) => {
           </Link>
 
           <Link to={"/home/computer"}>
-            <div className="flex  justify-start items-center w-[220px] px-[20px] rounded-3xl py-[5.5px] hover:bg-slate-200 cursor-pointer">
+            <div
+              className="flex  justify-start items-center w-[220px] px-[20px] rounded-3xl py-[5.5px] hover:bg-slate-200 cursor-pointer"
+              onClick={() => setCheck(true)}>
               <i className="material-symbols-outlined text-[19px] mr-[8px] text-[#5f6368]">
                 devices
               </i>
@@ -150,9 +167,10 @@ const NavLeft = ({ setType, setOpen, setFileName, setLoading }) => {
             </div>
           </Link>
           <br />
-          <ToastContainer />
           <Link to={"/home/shared"}>
-            <div className="flex  justify-start items-center w-[220px] px-[20px] rounded-3xl py-[5.5px] hover:bg-slate-200 cursor-pointer">
+            <div
+              className="flex  justify-start items-center w-[220px] px-[20px] rounded-3xl py-[5.5px] hover:bg-slate-200 cursor-pointer"
+              onClick={() => setCheck(true)}>
               <img
                 src="/assets/group.png"
                 alt=""
@@ -162,13 +180,17 @@ const NavLeft = ({ setType, setOpen, setFileName, setLoading }) => {
             </div>
           </Link>
           <Link to={"/home/recent"}>
-            <div className="flex  justify-start items-center w-[220px] px-[20px] rounded-3xl py-[5.5px] hover:bg-slate-200 cursor-pointer">
+            <div
+              className="flex  justify-start items-center w-[220px] px-[20px] rounded-3xl py-[5.5px] hover:bg-slate-200 cursor-pointer"
+              onClick={() => setCheck(true)}>
               <i className="material-icons text-[19px] mr-[8px]">schedule</i>
               <p className="font-[300] text-[14px]">Recent</p>
             </div>
           </Link>
           <Link to={"/home/starred"}>
-            <div className="flex  justify-start items-center w-[220px] px-[20px] rounded-3xl py-[5.5px] hover:bg-slate-200 cursor-pointer">
+            <div
+              className="flex  justify-start items-center w-[220px] px-[20px] rounded-3xl py-[5.5px] hover:bg-slate-200 cursor-pointer"
+              onClick={() => setCheck(true)}>
               <img
                 src="/assets/favorite.png"
                 alt=""
@@ -180,7 +202,9 @@ const NavLeft = ({ setType, setOpen, setFileName, setLoading }) => {
           <br />
 
           <Link to={"/home/spam"}>
-            <div className="flex  justify-start items-center w-[220px] px-[20px] rounded-3xl py-[5.5px] hover:bg-slate-200 cursor-pointer">
+            <div
+              className="flex  justify-start items-center w-[220px] px-[20px] rounded-3xl py-[5.5px] hover:bg-slate-200 cursor-pointer"
+              onClick={() => setCheck(true)}>
               <img
                 src="/assets/spam.png"
                 alt=""
@@ -191,7 +215,9 @@ const NavLeft = ({ setType, setOpen, setFileName, setLoading }) => {
           </Link>
 
           <Link to={"/home/trash"}>
-            <div className="flex  justify-start items-center w-[220px] px-[20px] rounded-3xl py-[5.5px] hover:bg-slate-200 cursor-pointer">
+            <div
+              className="flex  justify-start items-center w-[220px] px-[20px] rounded-3xl py-[5.5px] hover:bg-slate-200 cursor-pointer"
+              onClick={() => setCheck(true)}>
               <img
                 src="/assets/trash-can.png"
                 alt=""
@@ -200,7 +226,11 @@ const NavLeft = ({ setType, setOpen, setFileName, setLoading }) => {
               <p className="font-[300] text-[14px]">Trash</p>
             </div>
           </Link>
-          <div className="flex  justify-start items-center w-[220px] px-[20px] rounded-3xl py-[5.5px] hover:bg-slate-200 cursor-pointer">
+          <div
+            className="flex  justify-start items-center w-[220px] px-[20px] rounded-3xl py-[5.5px] hover:bg-slate-200 cursor-pointer"
+            // onClick={() => setCheck(true)}
+            // style={{ backgroundColor: check ? "#c2e7ff" : "" }}
+          >
             <img
               src="/assets/c.png"
               alt=""

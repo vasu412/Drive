@@ -24,6 +24,19 @@ const Options = ({
     dispatch(add(1));
   }
 
+  const shareFile = async (fileUrl, title, text) => {
+    try {
+      await navigator.share({
+        title: title,
+        text: text,
+        url: fileUrl,
+      });
+      console.log("File shared successfully");
+    } catch (error) {
+      console.error("Error sharing file:", error);
+    }
+  };
+
   return (
     <div className="bg-[#f0f4f9] my-[4px] h-[40px] w-[1100px] flex items-center rounded-3xl px-[5px] text-[#444746] gap-[9px]">
       <div
@@ -35,7 +48,9 @@ const Options = ({
         <i className="material-symbols-outlined text-[20px] ">close</i>
       </div>
       <p className="text-[14px] mx-[7px]">1 selected</p>
-      <div className="h-[32px] w-[32px] flex items-center justify-center  hover:bg-slate-200 rounded-full  transition-all delay-75 cursor-pointer">
+      <div
+        className="h-[32px] w-[32px] flex items-center justify-center  hover:bg-slate-200 rounded-full  transition-all delay-75 cursor-pointer"
+        onClick={() => shareFile(data.url, data.name, data.type)}>
         <i className="material-symbols-outlined text-[20px] ">person_add</i>
       </div>
       <a href={data.url} target="blank">

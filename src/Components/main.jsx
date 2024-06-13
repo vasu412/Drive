@@ -13,7 +13,7 @@ import Trash from "./trash";
 import Spam from "./spam";
 import Recent from "./Recent";
 import Starred from "./Starred";
-import Notification from "./Notification";
+import Search from "./search";
 
 const router = createBrowserRouter([
   {
@@ -59,6 +59,10 @@ const router = createBrowserRouter([
       {
         path: "/home/starred",
         element: <Starred />,
+      },
+      {
+        path: "/home/search",
+        element: <Search />,
       },
     ],
   },
