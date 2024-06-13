@@ -1,19 +1,29 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addDoc, collection, deleteDoc, doc } from "firebase/firestore";
 import { db } from "../config/firebase";
+import { add } from "../config/slices";
 
 const trashData = collection(db, "trash");
 const driveData = collection(db, "driveData");
 
-const Options = ({ setSelect, setShowIndex }) => {
+const Options = ({
+  setSelect,
+  setShowIndex,
+  setShowNotification,
+  setMessage,
+}) => {
   const data = useSelector((store) => store.option.profileVal);
+  const dispatch = useDispatch();
 
   async function trash() {
     await addDoc(trashData, data);
     await deleteDoc(doc(driveData, data.id));
     setSelect(false);
-    console.log("deleted");
+    setMessage("File moved to trash");
+    setShowNotification(true);
+    dispatch(add(1));
   }
+
   return (
     <div className="bg-[#f0f4f9] my-[4px] h-[40px] w-[1100px] flex items-center rounded-3xl px-[5px] text-[#444746] gap-[9px]">
       <div
@@ -38,7 +48,12 @@ const Options = ({ setSelect, setShowIndex }) => {
         onClick={trash}>
         <i className="material-symbols-outlined text-[20px] ">delete</i>
       </div>
-      <div className="h-[32px] w-[32px] flex items-center justify-center  hover:bg-slate-200 rounded-full  transition-all delay-75 cursor-pointer">
+      <div
+        className="h-[32px] w-[32px] flex items-center justify-center  hover:bg-slate-200 rounded-full  transition-all delay-75 cursor-pointer"
+        onClick={() => {
+          setMessage("Link copied");
+          setShowNotification(true);
+        }}>
         <i className="material-symbols-outlined text-[20px] ">link</i>
       </div>
       <div className="h-[32px] w-[32px] flex items-center justify-center  hover:bg-slate-200 rounded-full  transition-all delay-75 cursor-pointer">

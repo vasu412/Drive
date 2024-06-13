@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { auth, db } from "../config/firebase";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -9,10 +9,13 @@ import {
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { addDoc, collection } from "firebase/firestore";
+import Notification from "./Notification";
 
 const Hero = () => {
   const navigate = useNavigate();
   const profile = collection(db, "profile");
+  const [showNotification, setShowNotification] = useState(false);
+  const [message, setMessage] = useState("");
 
   const provider = new GoogleAuthProvider();
   provider.setCustomParameters({
@@ -22,7 +25,8 @@ const Hero = () => {
   async function signInWithGoogle() {
     onAuthStateChanged(auth, async (user) => {
       if (user) {
-        toast("Logged In!");
+        setShowNotification(true);
+        setMessage("User is Logged In!");
       } else {
         const data = await signInWithPopup(auth, provider);
         const user = data.user;
@@ -41,7 +45,8 @@ const Hero = () => {
       if (user) {
         navigate("/home");
       } else {
-        toast("Log in first");
+        setShowNotification(true);
+        setMessage("Log in first");
       }
     });
   }
@@ -82,7 +87,13 @@ const Hero = () => {
               onClick={signInWithGoogle2}>
               Go to Drive
             </button>
-            <ToastContainer />
+            {showNotification && (
+              <Notification
+                message={message}
+                setShowNotification={setShowNotification}
+                showNotification={showNotification}
+              />
+            )}
           </div>
           <div className="mt-[36px]">
             <span className="text-[#5f6368] font-gr text-[18px]">

@@ -4,6 +4,7 @@ import Data2 from "./Data2";
 import { useSelector } from "react-redux";
 import FileType from "./FileType";
 import Options from "./options";
+import Notification from "./Notification";
 
 const Drive = () => {
   const [file, setFile] = useState(true);
@@ -11,6 +12,8 @@ const Drive = () => {
   const [folders, setFolders] = useState(false);
   const [select, setSelect] = useState(false);
   const [showIndex, setShowIndex] = useState(null);
+  const [showNotification, setShowNotification] = useState(false);
+  const [message, setMessage] = useState("");
 
   const driveData = useSelector((store) => store.states.stateVal);
 
@@ -79,7 +82,12 @@ const Drive = () => {
               file2={file2}
             />
           ) : (
-            <Options setSelect={setSelect} setShowIndex={setShowIndex} />
+            <Options
+              setSelect={setSelect}
+              setShowIndex={setShowIndex}
+              setMessage={setMessage}
+              setShowNotification={setShowNotification}
+            />
           )}
           {driveData.length === 0 || (!file && folders) ? (
             <div className="flex flex-col items-center">
@@ -117,6 +125,8 @@ const Drive = () => {
                   setShowIndex={setShowIndex}
                   setSelect={setSelect}
                   idx={idx}
+                  setMessage={setMessage}
+                  setShowNotification={setShowNotification}
                 />
               ))}
             </div>
@@ -136,6 +146,13 @@ const Drive = () => {
                 ))}
               </div>
             </div>
+          )}
+          {showNotification && (
+            <Notification
+              message={message}
+              setShowNotification={setShowNotification}
+              showNotification={showNotification}
+            />
           )}
         </div>
       </div>

@@ -3,7 +3,7 @@ import { db } from "../config/firebase";
 import { addDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addState } from "../config/slices";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { ToastContainer, toast } from "react-toastify";
@@ -29,6 +29,9 @@ const NavLeft = ({ setType, setOpen, setFileName, setLoading }) => {
     //   }
     // }
   };
+
+  const state = useSelector((store) => store.simpleState.count);
+  console.log(state);
 
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
@@ -100,7 +103,9 @@ const NavLeft = ({ setType, setOpen, setFileName, setLoading }) => {
 
   useEffect(() => {
     get();
-  }, [fileURL]);
+    console.log("checking");
+    console.log(state);
+  }, [fileURL, state]);
 
   return (
     <div className="float-left w-[250px]  flex flex-col justify-center items-start px-[12px] pt-[10px]">

@@ -13,6 +13,7 @@ import Trash from "./trash";
 import Spam from "./spam";
 import Recent from "./Recent";
 import Starred from "./Starred";
+import Notification from "./Notification";
 
 const router = createBrowserRouter([
   {

@@ -4,30 +4,44 @@ import pic from "/assets/pic.svg";
 import movie from "/assets/movie.svg";
 import pdf from "/assets/pdf.svg";
 import { useState } from "react";
-import { addOption } from "../config/slices";
+import { add, addOption } from "../config/slices";
 import { db } from "../config/firebase";
 import { setDoc } from "firebase/firestore";
 import { collection, doc } from "firebase/firestore";
 
-const Data = ({ x, show, setShowIndex, setSelect, idx }) => {
+const Data = ({
+  x,
+  show,
+  setShowIndex,
+  setSelect,
+  idx,
+  setMessage,
+  setShowNotification,
+}) => {
   const profile = useSelector((store) => store.profile.profileVal);
   const [funcs, setFuncs] = useState(false);
   const [star, setStar] = useState(x.isStarred);
 
   const driveData = collection(db, "driveData");
   const driveDocRef = doc(driveData, x.id);
+  const dispatch = useDispatch();
 
   async function send() {
     await setDoc(driveDocRef, { isStarred: true }, { merge: true });
     setStar(true);
+    dispatch(add(1));
+    setMessage("1 file added to stared");
+    setShowNotification(true);
   }
 
   async function remove() {
     await setDoc(driveDocRef, { isStarred: false }, { merge: true });
     setStar(false);
+    dispatch(add(1));
+    setMessage("1 file removed from stared");
+    setShowNotification(true);
   }
 
-  const dispatch = useDispatch();
   let type =
     x.type.split("/")[0] == "image"
       ? pic

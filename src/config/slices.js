@@ -37,8 +37,21 @@ export const option = createSlice({
   },
 });
 
+export const simpleState = createSlice({
+  name: "state",
+  initialState: {
+    count: 0,
+  },
+  reducers: {
+    add: (state, action) => {
+      state.count += action.payload;
+    },
+  },
+});
+
 export const { addState } = states.actions;
 export const { addProfile } = profile.actions;
 export const { addOption } = option.actions;
+export const { add } = simpleState.actions;
 
 export default states.reducer;

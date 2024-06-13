@@ -3,11 +3,12 @@ import docs from "/assets/doc.svg";
 import pic from "/assets/pic.svg";
 import movie from "/assets/movie.svg";
 import pdf from "/assets/pdf.svg";
-import { useState } from "react";
 import { addOption } from "../config/slices";
+import { useState } from "react";
 
 const Data3 = ({ x, show, setShowIndex, setSelect, idx }) => {
   const profile = useSelector((store) => store.profile.profileVal);
+  const [star, setStar] = useState(x.isStarred);
 
   const dispatch = useDispatch();
   let type =
@@ -35,7 +36,9 @@ const Data3 = ({ x, show, setShowIndex, setSelect, idx }) => {
         <p className="text-ellipsis overflow-hidden whitespace-nowrap">
           {x.name}
         </p>
-        <img src="/assets/st.png" alt="" className="h-[16px] ml-[10px]" />
+        {star && (
+          <img src="/assets/st.png" alt="" className="h-[16px] ml-[10px]" />
+        )}
       </div>
       <div className="w-[140px]  px-[6px] flex text-[#444746] text-[13px]">
         <img
