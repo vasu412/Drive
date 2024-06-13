@@ -50,7 +50,7 @@ Let's embark on this journey together, enhancing productivity and efficiency in 
 
 ## 💻<span style="color:#29c4f6">TECHNOLOGIES
 
-[![My Skills](https://skillicons.dev/icons?i=html,css,js)](https://skillicons.dev)
+[![My Skills](https://skillicons.dev/icons?i=html,css,js,react,vite,fiebase)](https://skillicons.dev)
 
 #### <span style="color:#ef00ff">1. HTML
 
