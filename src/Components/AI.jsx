@@ -50,7 +50,9 @@ const AI = () => {
           {!submit ? (
             <div className="w-[830px] h-[424px] flex flex-col justify-between ">
               <div className="mt-[10px] mb-[38px] text-[54px] ml-[10px]">
-                <p className="text h-[64px]">Hello, {profile.displayName}</p>
+                <p className="text h-[70px]">
+                  Hello, {user.displayName.split(" ")[0]}
+                </p>
                 <p className="text-[#444746] font-[500]">
                   How can I help you today?
                 </p>
