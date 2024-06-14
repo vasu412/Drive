@@ -40,14 +40,19 @@ const Hero = () => {
   }
 
   async function signInWithGoogle2() {
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        navigate("/home");
-      } else {
-        setShowNotification(true);
-        setMessage("Log in first");
-      }
-    });
+    if (auth.currentUser) navigate("/home");
+    else {
+      setShowNotification(true);
+      setMessage("Log in first");
+    }
+  }
+
+  async function signInWithGoogle3() {
+    if (auth.currentUser) navigate("/ai");
+    else {
+      setShowNotification(true);
+      setMessage("Log in first");
+    }
   }
 
   return (
@@ -71,7 +76,7 @@ const Hero = () => {
             Store, share, and collaborate on files and folders from your mobile
             device, tablet, or computer
           </p>
-          <div className="mt-[36px]" onClick={() => navigate("/ai")}>
+          <div className="mt-[36px]" onClick={() => signInWithGoogle3()}>
             <button className="bg-[#1a73e8] text-white py-[14px] px-[24px] pr-[38px] rounded-[5px] mr-[16px]  text-[18px] relative font-gr">
               Talk to AI
               <img
@@ -472,7 +477,7 @@ const Hero = () => {
           <div className="flex justify-center">
             <button
               className="bg-[#1a73e8] text-white py-[14px] px-[24px] pr-[38px] rounded-[5px] mr-[16px]  text-[18px] relative font-gr"
-              onClick={() => navigate("/ai")}>
+              onClick={() => signInWithGoogle3()}>
               Talk to AI
               <img
                 src="/assets/sparkler.png"
