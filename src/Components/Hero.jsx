@@ -212,14 +212,14 @@ const Hero = () => {
             />
           </div>
         </div>
-        <div className="mx-[72px] h-[430px] flex overflow-y-hidden shadow-xl hide">
-          <div className="h-full min-w-full text-center flex flex-col justify-center items-center">
+        <div className="mx-[72px] min-w-[1296px] h-[430px] flex overflow-y-hidden shadow-xl hide">
+          <div className="h-full  text-center flex flex-col justify-center items-center">
             <img
               src="https://kstatic.googleusercontent.com/files/5a11c2b63159b3919b3be118ace5a7945144ce95d661c7e4bcb3948f3c6ee6d6e86dc70d5b1bcf995734be8ebb3589b8ea44347dfa8a530fc1ab118bfd65eba0"
               alt=""
               className="pt-[80px] h-[190px] w-[130px]"
             />
-            <h1 className="py-[24px] text-[32px] font-gr text-[#202124]">
+            <h1 className="py-[24px] w-[1296px] text-[32px] font-gr text-[#202124]">
               “I never worry about finding a document. Everything’s in Drive, I
               can access it anywhere, and that’s been revolutionary.”
             </h1>
@@ -235,7 +235,7 @@ const Hero = () => {
               alt=""
               className="pt-[80px] h-[140px] w-[300px]"
             />
-            <h1 className="py-[24px]  text-[33px] font-[300] text-[#202124] font-gr">
+            <h1 className="py-[24px] w-[1296px] text-[33px] font-[300] text-[#202124] font-gr">
               “Most of our team members were already familiar with Drive and
               found it very intuitive and easy to use, so change management was
               minimal and we were quickly up and running.”
@@ -252,7 +252,7 @@ const Hero = () => {
               alt=""
               className="pt-[80px] h-[140px] w-[190px]"
             />
-            <h1 className="py-[24px] text-[32px] font-gr text-[#202124]">
+            <h1 className="py-[24px] w-[1296px] text-[32px] font-gr text-[#202124]">
               “Real-time collaboration with Google Docs and Drive is a
               must-have...if we ever tried to move employees off it, it would be
               a torches and pitchforks situation—complete chaos.”
@@ -269,7 +269,7 @@ const Hero = () => {
               alt=""
               className="pt-[80px] h-[120px] w-[250px]"
             />
-            <h1 className="py-[24px] text-[32px] font-gr text-[#202124]">
+            <h1 className="py-[24px] w-[1296px] text-[32px] font-gr text-[#202124]">
               “Google is revolutionizing collaboration and individual
               productivity through AI. Employees can focus more on creating
               value for our customers and less on mundane tasks.”
@@ -470,7 +470,9 @@ const Hero = () => {
             Ready to get started?
           </h1>
           <div className="flex justify-center">
-            <button className="bg-[#1a73e8] text-white py-[14px] px-[24px] pr-[38px] rounded-[5px] mr-[16px]  text-[18px] relative font-gr">
+            <button
+              className="bg-[#1a73e8] text-white py-[14px] px-[24px] pr-[38px] rounded-[5px] mr-[16px]  text-[18px] relative font-gr"
+              onClick={() => navigate("/ai")}>
               Talk to AI
               <img
                 src="/assets/sparkler.png"
@@ -478,7 +480,9 @@ const Hero = () => {
                 className="h-[20px] w-[20px] absolute right-[15px] top-[17px] ml-[8px]"
               />
             </button>
-            <button className="py-[14px] px-[24px] rounded-[5px] mr-[16px] text-[#1a73e8] border font-gr text-[18px] ">
+            <button
+              className="py-[14px] px-[24px] rounded-[5px] mr-[16px] text-[#1a73e8] border font-gr text-[18px] "
+              onClick={signInWithGoogle2}>
               Go to Drive
             </button>
           </div>

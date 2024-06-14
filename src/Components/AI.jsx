@@ -50,7 +50,7 @@ const AI = () => {
           {!submit ? (
             <div className="w-[830px] h-[424px] flex flex-col justify-between ">
               <div className="mt-[10px] mb-[38px] text-[54px] ml-[10px]">
-                <p className="text h-[64px]">Hello, User</p>
+                <p className="text h-[64px]">Hello, {profile.displayName}</p>
                 <p className="text-[#444746] font-[500]">
                   How can I help you today?
                 </p>
@@ -99,19 +99,29 @@ const AI = () => {
               </div>
             </div>
           ) : (
-            <div className="w-[712px]">
-              <div className="py-[8px] flex items-center">
-                <div className="h-[32px] w-[32px] m-[12px] mr-[20px] flex items-center  justify-center rounded-full cursor-pointer">
-                  <img src={user.photoURL} className="rounded-full" alt="" />
+            <div className="w-[712px] h-[560px]  overflow-scroll hide">
+              <div className="py-[8px] flex justify-start">
+                <div className="m-[12px] mr-[20px] min-w-[32px] max-w-[32px] cursor-pointer">
+                  <img
+                    src={user.photoURL}
+                    className="rounded-full w-full"
+                    alt=""
+                  />
                 </div>
                 <div className=" h-fit">
                   <p>{input}</p>
                 </div>
               </div>
-              <div className="pr-[44px] pb-[40px]">
+              <div className="pr-[44px] pb-[40px] ">
                 <div className="h-[48px]"></div>
-                <div className="flex">
-                  <div className="w-[52px]"></div>
+                <div className="flex justify-start">
+                  <div className="min-w-[52px]">
+                    <img
+                      src={user.photoURL}
+                      className="rounded-full h-[40px] min-w-[40px] mx-[10px]"
+                      alt=""
+                    />
+                  </div>
                   <div>
                     <p>{text}</p>
                   </div>
