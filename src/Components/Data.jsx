@@ -93,7 +93,7 @@ const Data = ({
                 person_add
               </i>
             </div>
-            <a href={x.url} target="blank">
+            <a href={x.url} target="blank" download={x.name}>
               <div className="h-[40px] w-[40px] flex items-center justify-center  hover:bg-slate-200 rounded-full  transition-all delay-75">
                 <i className="material-symbols-outlined text-[18px] ">
                   open_in_new

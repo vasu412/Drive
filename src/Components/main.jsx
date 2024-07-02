@@ -68,7 +68,7 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/ai",
+    path: "/AI",
     element: (
       <Provider store={store}>
         <AI />

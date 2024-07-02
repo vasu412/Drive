@@ -155,7 +155,7 @@ const NavLeft = ({
               <p className="font-[300] text-[14px]">My Drive</p>
             </div>
           </Link>
-
+          <ToastContainer />
           <Link to={"/home/computer"}>
             <div
               className="flex  justify-start items-center w-[220px] px-[20px] rounded-3xl py-[5.5px] hover:bg-slate-200 cursor-pointer"

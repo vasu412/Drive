@@ -11,7 +11,8 @@ import { addDoc, collection } from "firebase/firestore";
 import Notification from "./Notification";
 
 const Hero = () => {
-  const navigate = useNavigate();
+  const navigate1 = useNavigate();
+  const navigate2 = useNavigate();
   const profile = collection(db, "profile");
   const [showNotification, setShowNotification] = useState(false);
   const [message, setMessage] = useState("");
@@ -29,30 +30,44 @@ const Hero = () => {
       } else {
         const data = await signInWithPopup(auth, provider);
         const user = data.user;
-        await addDoc(profile, {
-          displayName: user.displayName,
-          email: user.email,
-          photoURL: user.photoURL,
-          emailVerified: user.emailVerified,
-        });
+
+        // Check if user already exists in the database
+        const q = query(profile, where("email", "==", user.email));
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.empty) {
+          // Add user to Firestore if they do not already exist
+          await addDoc(profile, {
+            displayName: user.displayName,
+            email: user.email,
+            photoURL: user.photoURL,
+            emailVerified: user.emailVerified,
+          });
+        }
       }
     });
   }
 
-  async function signInWithGoogle2() {
-    if (auth.currentUser) navigate("/home");
-    else {
-      setShowNotification(true);
-      setMessage("Log in first");
-    }
+  function signInWithGoogle2() {
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        navigate1("/home");
+      } else {
+        setShowNotification(true);
+        setMessage("Log in first");
+      }
+    });
   }
 
-  async function signInWithGoogle3() {
-    if (auth.currentUser) navigate("/ai");
-    else {
-      setShowNotification(true);
-      setMessage("Log in first");
-    }
+  function signInWithGoogle3() {
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        navigate2("/AI");
+      } else {
+        setShowNotification(true);
+        setMessage("Log in first");
+      }
+    });
   }
 
   return (
@@ -76,7 +91,7 @@ const Hero = () => {
             Store, share, and collaborate on files and folders from your mobile
             device, tablet, or computer
           </p>
-          <div className="mt-[36px]" onClick={() => signInWithGoogle3()}>
+          <div className="mt-[36px]" onClick={() => signInWithGoogle3("ai")}>
             <button className="bg-[#1a73e8] text-white py-[14px] px-[24px] pr-[38px] rounded-[5px] mr-[16px]  text-[18px] relative font-gr">
               Talk to AI
               <img
@@ -88,7 +103,7 @@ const Hero = () => {
 
             <button
               className="py-[14px] px-[24px] rounded-[5px] mr-[16px] text-[#1a73e8] border font-gr text-[18px] "
-              onClick={signInWithGoogle2}>
+              onClick={() => signInWithGoogle2()}>
               Go to Drive
             </button>
             {showNotification && (
