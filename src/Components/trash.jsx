@@ -42,7 +42,7 @@ const Trash = () => {
         Trash
       </h1>
 
-      <div className="border-[#202124] border w-[110px] h-[30px] rounded-3xl flex cursor-pointer float-right absolute right-[80px] top-[80px]">
+      <div className="border-[#202124] border border-solid w-[110px] h-[30px] rounded-3xl flex cursor-pointer float-right absolute right-[80px] top-[80px]">
         <div
           className="flex items-center w-[55px] justify-center rounded-l-2xl"
           style={{ backgroundColor: file2 ? "#c2e7ff" : "transparent" }}
@@ -52,7 +52,7 @@ const Trash = () => {
           )}
           <i className="material-symbols-outlined text-[21px]">menu</i>
         </div>
-        <div className="h-full  border-[#202124] border-r"></div>
+        <div className="h-full  border-[#202124] border-0 border-r border-solid"></div>
         <div
           className="flex items-center w-[55px] justify-center rounded-r-2xl"
           style={{ backgroundColor: file2 ? "transparent" : "#c2e7ff" }}
@@ -117,7 +117,7 @@ const Trash = () => {
         </div>
       ) : file2 ? (
         <div className="flex flex-col mt-[18px] w-full pl-[20px] pr-[12px]">
-          <div className="flex items-center text-start text-[14px] border-[#dadce0]  border-b">
+          <div className="flex items-center text-start text-[14px] border-[#dadce0] border-0  border-b-[1px] border-solid">
             <div className="w-[517px] h-[30px] pr-[6px] ">Name</div>
             <div className="w-[140px] h-[30px] px-[6px]">Owner</div>
             <div className="w-[144px] h-[30px] px-[6px]">Last Modified</div>

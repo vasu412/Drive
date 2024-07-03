@@ -52,7 +52,7 @@ const Data = ({
       : pdf;
   return (
     <div
-      className="flex items-center text-start text-[14px] h-[48px] border-[#dadce0] hover:bg-slate-100 border-b cursor-pointer"
+      className="flex items-center text-start text-[14px] h-[48px] border-[#dadce0] hover:bg-slate-100 border-0 border-b border-solid cursor-pointer"
       key={x.id}
       onMouseOver={() => setFuncs(true)}
       onMouseLeave={() => setFuncs(false)}

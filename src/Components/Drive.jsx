@@ -121,7 +121,7 @@ const Drive = () => {
             </div>
           ) : file2 ? (
             <div className="flex flex-col mt-[18px] w-full pl-[20px] pr-[12px]">
-              <div className="flex items-center text-start text-[14px] border-[#dadce0]  border-b">
+              <div className="flex items-center text-start text-[14px] border-[#dadce0] border-0  border-b-[1px] border-solid">
                 <div className="w-[382px] h-[30px] pr-[6px] ">Name</div>
                 <div className="w-[215px] h-[30px] px-[6px]">Owner</div>
                 <div className="w-[200px] h-[30px] px-[6px]">Last Modified</div>

@@ -30,20 +30,12 @@ const Hero = () => {
       } else {
         const data = await signInWithPopup(auth, provider);
         const user = data.user;
-
-        // Check if user already exists in the database
-        const q = query(profile, where("email", "==", user.email));
-        const querySnapshot = await getDocs(q);
-
-        if (querySnapshot.empty) {
-          // Add user to Firestore if they do not already exist
-          await addDoc(profile, {
-            displayName: user.displayName,
-            email: user.email,
-            photoURL: user.photoURL,
-            emailVerified: user.emailVerified,
-          });
-        }
+        await addDoc(profile, {
+          displayName: user.displayName,
+          email: user.email,
+          photoURL: user.photoURL,
+          emailVerified: user.emailVerified,
+        });
       }
     });
   }
