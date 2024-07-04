@@ -37,7 +37,8 @@ const Options = ({
       <p className="text-[14px] mx-[7px]">1 selected</p>
       <div
         className="h-[32px] w-[32px] flex items-center justify-center  hover:bg-slate-200 rounded-full  transition-all delay-75 cursor-pointer"
-        onClick={() => shareFile(data.url, data.name, data.type)}>
+        // onClick={() => shareFile(data.url, data.name, data.type)}
+      >
         <i className="material-symbols-outlined text-[20px] ">person_add</i>
       </div>
       <a href={data.url} target="blank">

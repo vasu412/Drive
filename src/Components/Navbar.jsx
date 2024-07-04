@@ -43,7 +43,6 @@ const Navbar = () => {
         ...docs.data(),
         id: docs.id,
       }));
-      console.log(filtereData);
       setProfile(filtereData[0]);
       dispatch(addProfile({ ...filtereData[0] }));
     }

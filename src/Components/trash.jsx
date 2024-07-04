@@ -87,6 +87,7 @@ const Trash = () => {
           <Options setSelect={setSelect} setShowIndex={setShowIndex} />
         </div>
       )}
+
       <div className="ml-[20px] mr-[7px] mt-[14px] px-[15px] py-[13px]  text-[13px] text-[#3c4043] bg-[#e3e5e6] rounded-lg justify-between flex relative">
         <p>Items in trash will be deleted forever after 30 days</p>
         <div
@@ -95,6 +96,7 @@ const Trash = () => {
           <p>Empty Trash</p>
         </div>
       </div>
+
       {data === "" || data.length === 0 ? (
         <div className="flex flex-col items-center">
           <img
@@ -128,7 +130,14 @@ const Trash = () => {
             </div>
           </div>
           {data.map((x, idx) => (
-            <Data3 x={x} key={x.id} idx={idx} />
+            <Data3
+              x={x}
+              key={x.id}
+              idx={idx}
+              show={idx === showIndex ? true : false}
+              setShowIndex={setShowIndex}
+              setSelect={setSelect}
+            />
           ))}
         </div>
       ) : (
