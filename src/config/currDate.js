@@ -49,3 +49,29 @@ export function formatFileSize(bytes) {
   else if (l >= 13 && l < 16)
     return Math.floor(bytes / 1000000000000) + " " + sizes[4];
 }
+
+function getStartOfWeek(date) {
+  const day = date.getDay();
+  const diff = date.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is sunday
+  return new Date(date.setDate(diff));
+}
+
+// Function to get the end date of the week
+function getEndOfWeek(startDate) {
+  return new Date(
+    startDate.getFullYear(),
+    startDate.getMonth(),
+    startDate.getDate() + 6
+  );
+}
+
+// Get the start and end dates of the current week
+export const startOfWeek = getStartOfWeek(new Date(now));
+export const endOfWeek = getEndOfWeek(new Date(startOfWeek));
+
+const formatDateString = (date) => {
+  const month = monthNames[date.getMonth()];
+  const day = date.getDate();
+  const year = date.getFullYear();
+  return `${month} ${day}, ${year}`;
+};

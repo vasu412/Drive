@@ -4,7 +4,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { Provider, useDispatch, useSelector } from "react-redux";
 import store from "../config/store";
 import { auth, db } from "../config/firebase";
-import { signOut } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
 import { addProfile, filter } from "../config/slices";
 import docs from "/assets/doc.svg";
@@ -15,15 +15,28 @@ import Info from "./info";
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const [prof2, setProf2] = useState(null);
   const [profile, setProfile] = useState("");
-  const prof = collection(db, "profile");
-  const [pro, setPro] = useState(false);
 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        setProf2(currentUser.email);
+      } else {
+        console.log("No user is logged in");
+      }
+    });
+
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
+  }, [auth]);
+
+  const [pro, setPro] = useState(false);
   const [types, setType] = useState("");
   const [open, setOpen] = useState(false);
   const [fileName, setFileName] = useState("");
   const [loading, setLoading] = useState(true);
-  const [check, setCheck] = useState(true);
+  const [check, setCheck] = useState(false);
   const [day, setDay] = useState(true);
 
   let type =
@@ -34,6 +47,8 @@ const Navbar = () => {
       : types == "text"
       ? docs
       : pdf;
+
+  const prof = prof2 && collection(db, prof2);
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -46,8 +61,8 @@ const Navbar = () => {
       setProfile(filtereData[0]);
       dispatch(addProfile({ ...filtereData[0] }));
     }
-    get();
-  }, []);
+    prof2 && get();
+  }, [prof2]);
 
   async function logOut() {
     try {
@@ -195,7 +210,7 @@ const Navbar = () => {
             day={day}
           />
           <div
-            className="float-right bg-white w-[78.5vw] h-[91vh] rounded-2xl mr-[55px] overflow-scroll"
+            className="float-right bg-white w-[78.5vw] h-[91vh] rounded-2xl mr-[55px]"
             style={{
               backgroundColor: day ? "#fff" : "#131314",
               color: day ? "black" : "#fff",

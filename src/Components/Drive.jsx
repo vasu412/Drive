@@ -81,23 +81,25 @@ const Drive = () => {
                   </i>
                 </div>
               </div>
-              {driveData.map((x, idx) => (
-                <Data
-                  x={x}
-                  key={x.id}
-                  show={idx === showIndex ? true : false}
-                  setShowIndex={setShowIndex}
-                  setSelect={setSelect}
-                  idx={idx}
-                  setMessage={setMessage}
-                  setShowNotification={setShowNotification}
-                />
-              ))}
+              <div className=" overflow-scroll h-[400px]">
+                {driveData.map((x, idx) => (
+                  <Data
+                    x={x}
+                    key={x.id}
+                    show={idx === showIndex ? true : false}
+                    setShowIndex={setShowIndex}
+                    setSelect={setSelect}
+                    idx={idx}
+                    setMessage={setMessage}
+                    setShowNotification={setShowNotification}
+                  />
+                ))}
+              </div>
             </div>
           ) : (
             <div className="pl-[20px] pt-[6px] pr-[12px]">
               <h1 className="pt-[8px] pb-[16px] text-[14px] font-gr">Files</h1>
-              <div className="flex flex-wrap gap-[17px]">
+              <div className="flex flex-wrap gap-[17px] overflow-scroll h-[400px]">
                 {driveData.map((x, idx) => (
                   <Data2
                     x={x}

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Data4 from "./data4";
 import { dateString } from "../config/currDate";
+import { startOfWeek } from "../config/currDate";
 
 const RecentData = ({ data, setShowIndex, setSelect, showIndex }) => {
   const [todayData, setTodayData] = useState(null);
@@ -23,7 +24,7 @@ const RecentData = ({ data, setShowIndex, setSelect, showIndex }) => {
         if (modifier === "PM") {
           hours = parseInt(hours, 10) + 12;
         }
-        return `${hours.padStart(2, "0")}:${minutes}`;
+        return `${hours}:${minutes}`;
       };
 
       const timeA = timeTo24Hr(a.time);
@@ -33,10 +34,23 @@ const RecentData = ({ data, setShowIndex, setSelect, showIndex }) => {
     });
 
     const filter2 = data.filter((x) => {
-      if (x.date !== dateString) return x;
+      const xDate = new Date();
+      return x.date < xDate && x.date > startOfWeek;
     });
-    filter1 !== [] && setTodayData(filter1);
-    filter2 !== [] && setWeekData(filter2);
+
+    filter2.sort((a, b) => {
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
+      return dateA - dateB;
+    });
+
+    const filter3 = data.filter((x) => {
+      if (!filter1.includes(x) && !filter2.includes(x)) return x;
+    });
+
+    setTodayData(filter1);
+    setWeekData(filter2);
+    setYearData(filter3);
   }, []);
 
   return (
@@ -48,63 +62,65 @@ const RecentData = ({ data, setShowIndex, setSelect, showIndex }) => {
         <div className="w-[140px] h-[30px] px-[6px]">Location</div>
       </div>
 
-      {todayData && todayData.length !== 0 && (
-        <div className="flex items-center text-start text-[14px] border-[#c7c7c7] border-0 mt-[14px] border-b-[1px] border-solid">
-          <div className="w-[655px] h-[30px] pr-[6px] text-[#5e5e5e] ">
-            Today
+      <div className=" overflow-scroll h-[550px]">
+        {todayData && todayData.length !== 0 && (
+          <div className="flex items-center text-start text-[14px] border-[#c7c7c7] border-0 mt-[14px] border-b-[1px] border-solid">
+            <div className="w-[655px] h-[30px] pr-[6px] text-[#5e5e5e] ">
+              Today
+            </div>
           </div>
-        </div>
-      )}
-      {todayData &&
-        todayData.map((x, idx) => (
-          <Data4
-            x={x}
-            key={x.id}
-            idx={idx}
-            show={idx === showIndex ? true : false}
-            setShowIndex={setShowIndex}
-            setSelect={setSelect}
-            today={today}
-          />
-        ))}
+        )}
+        {todayData &&
+          todayData.map((x, idx) => (
+            <Data4
+              x={x}
+              key={x.id}
+              idx={idx}
+              show={idx === showIndex ? true : false}
+              setShowIndex={setShowIndex}
+              setSelect={setSelect}
+              today={today}
+            />
+          ))}
 
-      {weekData && weekData.length !== 0 && (
-        <div className="flex items-center text-start text-[14px] border-[#c7c7c7] border-0 mt-[14px] border-b-[1px] border-solid">
-          <div className="w-[655px] h-[30px] pr-[6px] text-[#5e5e5e] ">
-            Earlier this week
+        {weekData && weekData.length !== 0 && (
+          <div className="flex items-center text-start text-[14px] border-[#c7c7c7] border-0 mt-[14px] border-b-[1px] border-solid">
+            <div className="w-[655px] h-[30px] pr-[6px] text-[#5e5e5e] ">
+              Earlier this week
+            </div>
           </div>
-        </div>
-      )}
-      {weekData &&
-        weekData.map((x, idx) => (
-          <Data4
-            x={x}
-            key={x.id}
-            idx={idx}
-            show={idx === showIndex ? true : false}
-            setShowIndex={setShowIndex}
-            setSelect={setSelect}
-          />
-        ))}
+        )}
+        {weekData &&
+          weekData.map((x, idx) => (
+            <Data4
+              x={x}
+              key={x.id}
+              idx={idx}
+              show={idx === showIndex ? true : false}
+              setShowIndex={setShowIndex}
+              setSelect={setSelect}
+            />
+          ))}
 
-      {yearData && yearData.length !== 0 && (
-        <div className="flex items-center text-start text-[14px] border-[#c7c7c7] border-0 mt-[14px] border-b-[1px] border-solid">
-          <div className="w-[655px] h-[30px] pr-[6px] text-[#5e5e5e]">
-            Earlier this year
+        {yearData && yearData.length !== 0 && (
+          <div className="flex items-center text-start text-[14px] border-[#c7c7c7] border-0 mt-[14px] border-b-[1px] border-solid">
+            <div className="w-[655px] h-[30px] pr-[6px] text-[#5e5e5e]">
+              Earlier this year
+            </div>
           </div>
-        </div>
-      )}
-      {yearData &&
-        yearData.map((x, idx) => (
-          <Data4
-            x={x}
-            key={x.id}
-            idx={idx}
-            show={idx === showIndex ? true : false}
-            setShowIndex={setShowIndex}
-            setSelect={setSelect}
-          />
-        ))}
+        )}
+        {yearData &&
+          yearData.map((x, idx) => (
+            <Data4
+              x={x}
+              key={x.id}
+              idx={idx}
+              show={idx === showIndex ? true : false}
+              setShowIndex={setShowIndex}
+              setSelect={setSelect}
+            />
+          ))}
+      </div>
     </div>
   );
 };

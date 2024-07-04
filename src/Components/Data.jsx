@@ -3,11 +3,12 @@ import docs from "/assets/doc.svg";
 import pic from "/assets/pic.svg";
 import movie from "/assets/movie.svg";
 import pdf from "/assets/pdf.svg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { add, addOption } from "../config/slices";
-import { db } from "../config/firebase";
+import { auth, db } from "../config/firebase";
 import { setDoc } from "firebase/firestore";
 import { collection, doc } from "firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
 
 const Data = ({
   x,
@@ -21,9 +22,22 @@ const Data = ({
   const profile = useSelector((store) => store.profile.profileVal);
   const [funcs, setFuncs] = useState(false);
   const [star, setStar] = useState(x.isStarred);
+  const [userId, setUserId] = useState(null);
 
-  const driveData = collection(db, "driveData");
-  const driveDocRef = doc(driveData, x.id);
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        setUserId(currentUser.uid);
+      } else {
+        console.log("No user is logged in");
+      }
+    });
+
+    return () => unsubscribe();
+  }, [auth]);
+
+  const driveData = userId && collection(db, userId);
+  const driveDocRef = userId && doc(driveData, x.id);
   const dispatch = useDispatch();
 
   async function send() {

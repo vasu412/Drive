@@ -1,11 +1,17 @@
 import { collection, getDocs } from "firebase/firestore";
-import { db } from "../config/firebase";
+import { auth, db } from "../config/firebase";
 import { addDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addState } from "../config/slices";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  deleteObject,
+} from "firebase/storage";
 import { ToastContainer, toast } from "react-toastify";
 import {
   dateString,
@@ -13,6 +19,7 @@ import {
   formatDate,
   formatFileSize,
 } from "../config/currDate";
+import { onAuthStateChanged } from "firebase/auth";
 
 const NavLeft = ({
   setType,
@@ -22,13 +29,26 @@ const NavLeft = ({
   setCheck,
   day,
 }) => {
-  const driveData = collection(db, "driveData");
   const dispatch = useDispatch();
   const storage = getStorage();
 
   const [fileURL, setFileURL] = useState("");
   const [file, setFile] = useState("");
   const [doc, setDoc] = useState(null);
+  const [idx, setIdx] = useState(1);
+  const [userId, setUserId] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        setUserId(currentUser.uid);
+      } else {
+        console.log("No user is logged in");
+      }
+    });
+
+    return () => unsubscribe();
+  }, [auth]);
 
   const handleButtonClick = async () => {
     document.getElementById("fileInput").click();
@@ -44,19 +64,20 @@ const NavLeft = ({
   };
 
   const state = useSelector((store) => store.simpleState.count);
+  const driveData = userId && collection(db, userId);
 
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
     if (file) {
-      console.log(file);
+      setLoading(true);
       setFile(file);
       setOpen(true);
       setFileName(file.name);
       setType(file.type.split("/")[0]);
+
       const storedFile = ref(storage, file.name);
       await uploadBytes(storedFile, file);
       const url = await getDownloadURL(storedFile);
-      console.log(url);
       setFileURL(url);
       setLoading(false);
     }
@@ -95,8 +116,8 @@ const NavLeft = ({
   }, [fileURL]);
 
   useEffect(() => {
-    get();
-  }, [fileURL, state]);
+    userId && get();
+  }, [fileURL, state, userId]);
 
   return (
     <div
@@ -121,18 +142,16 @@ const NavLeft = ({
             onChange={handleFileChange}
           />
         </button>
-        {/* <div className="bg-white w-[330px] h-[150px] absolute top-[70px] shadow-md rounded-lg none">
-          <div></div>
-          <div></div>
-          <div></div>
-        </div> */}
       </div>
       <div className="mt-[20px]">
         <div>
           <Link to={"/home"}>
             <div
               className="flex  justify-start items-center w-[220px] px-[20px] rounded-3xl py-[5.5px] hover:bg-slate-200 cursor-pointer"
-              onClick={() => setCheck(false)}>
+              onClick={() => {
+                setCheck(false), setIdx(1);
+              }}
+              style={{ backgroundColor: idx === 1 ? "#c2e7ff" : "" }}>
               <img
                 src="/assets/gd.png"
                 alt=""
@@ -145,7 +164,10 @@ const NavLeft = ({
           <Link to={"/home/computer"}>
             <div
               className="flex  justify-start items-center w-[220px] px-[20px] rounded-3xl py-[5.5px] hover:bg-slate-200 cursor-pointer"
-              onClick={() => setCheck(true)}>
+              onClick={() => {
+                setCheck(true), setIdx(2);
+              }}
+              style={{ backgroundColor: idx === 2 ? "#c2e7ff" : "" }}>
               <i className="material-symbols-outlined text-[19px] mr-[8px] text-[#5f6368]">
                 devices
               </i>
@@ -156,7 +178,10 @@ const NavLeft = ({
           <Link to={"/home/shared"}>
             <div
               className="flex  justify-start items-center w-[220px] px-[20px] rounded-3xl py-[5.5px] hover:bg-slate-200 cursor-pointer"
-              onClick={() => setCheck(true)}>
+              onClick={() => {
+                setCheck(true), setIdx(3);
+              }}
+              style={{ backgroundColor: idx === 3 ? "#c2e7ff" : "" }}>
               <img
                 src="/assets/group.png"
                 alt=""
@@ -168,7 +193,10 @@ const NavLeft = ({
           <Link to={"/home/recent"}>
             <div
               className="flex  justify-start items-center w-[220px] px-[20px] rounded-3xl py-[5.5px] hover:bg-slate-200 cursor-pointer"
-              onClick={() => setCheck(true)}>
+              onClick={() => {
+                setCheck(true), setIdx(4);
+              }}
+              style={{ backgroundColor: idx === 4 ? "#c2e7ff" : "" }}>
               <i className="material-icons text-[19px] mr-[8px]">schedule</i>
               <p className="font-[300] text-[14px]">Recent</p>
             </div>
@@ -176,7 +204,10 @@ const NavLeft = ({
           <Link to={"/home/starred"}>
             <div
               className="flex  justify-start items-center w-[220px] px-[20px] rounded-3xl py-[5.5px] hover:bg-slate-200 cursor-pointer"
-              onClick={() => setCheck(true)}>
+              onClick={() => {
+                setCheck(true), setIdx(5);
+              }}
+              style={{ backgroundColor: idx === 5 ? "#c2e7ff" : "" }}>
               <img
                 src="/assets/favorite.png"
                 alt=""
@@ -190,7 +221,10 @@ const NavLeft = ({
           <Link to={"/home/spam"}>
             <div
               className="flex  justify-start items-center w-[220px] px-[20px] rounded-3xl py-[5.5px] hover:bg-slate-200 cursor-pointer"
-              onClick={() => setCheck(true)}>
+              onClick={() => {
+                setCheck(true), setIdx(6);
+              }}
+              style={{ backgroundColor: idx === 6 ? "#c2e7ff" : "" }}>
               <img
                 src="/assets/spam.png"
                 alt=""
@@ -203,7 +237,10 @@ const NavLeft = ({
           <Link to={"/home/trash"}>
             <div
               className="flex  justify-start items-center w-[220px] px-[20px] rounded-3xl py-[5.5px] hover:bg-slate-200 cursor-pointer"
-              onClick={() => setCheck(true)}>
+              onClick={() => {
+                setCheck(true), setIdx(7);
+              }}
+              style={{ backgroundColor: idx === 7 ? "#c2e7ff" : "" }}>
               <img
                 src="/assets/trash-can.png"
                 alt=""
@@ -214,9 +251,10 @@ const NavLeft = ({
           </Link>
           <div
             className="flex  justify-start items-center w-[220px] px-[20px] rounded-3xl py-[5.5px] hover:bg-slate-200 cursor-pointer"
-            // onClick={() => setCheck(true)}
-            // style={{ backgroundColor: check ? "#c2e7ff" : "" }}
-          >
+            style={{ backgroundColor: idx === 8 ? "#c2e7ff" : "" }}
+            onClick={() => {
+              setCheck(true), setIdx(8);
+            }}>
             <img
               src="/assets/c.png"
               alt=""

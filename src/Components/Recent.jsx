@@ -1,21 +1,34 @@
 import { useEffect, useState } from "react";
 import Options from "./options";
-import Data4 from "./data4";
-import Data2 from "./Data2";
 import { collection, getDocs } from "firebase/firestore";
-import { db } from "../config/firebase";
+import { auth, db } from "../config/firebase";
 import FileOrFolder from "./fileorfolder";
 import RecentData from "./RecentData";
-import Shimmer from "./shimmer";
 import RecentData2 from "./RecentData2";
+import { onAuthStateChanged } from "firebase/auth";
+import { useSelector } from "react-redux";
 
 const Recent = () => {
   const [file2, setFile2] = useState(true);
   const [data, setData] = useState("");
   const [select, setSelect] = useState(false);
   const [showIndex, setShowIndex] = useState(null);
+  const [userId, setUserId] = useState(null);
+  const state = useSelector((store) => store.simpleState.count);
 
-  const driveData = collection(db, "driveData");
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        setUserId(currentUser.uid);
+      } else {
+        console.log("No user is logged in");
+      }
+    });
+
+    return () => unsubscribe();
+  }, [auth]);
+
+  const driveData = userId && collection(db, userId);
   async function getData() {
     const data = await getDocs(driveData);
     const filteredData = data.docs.map((docs) => ({
@@ -26,8 +39,8 @@ const Recent = () => {
   }
 
   useEffect(() => {
-    getData();
-  }, []);
+    userId && getData();
+  }, [userId, state]);
 
   return (
     <>

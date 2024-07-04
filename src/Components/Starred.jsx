@@ -1,18 +1,34 @@
 import { useState, useEffect } from "react";
-import { db } from "../config/firebase";
+import { auth, db } from "../config/firebase";
 import { getDocs, collection } from "firebase/firestore";
 import FileOrFolder from "./fileorfolder";
 import Options from "./options";
 import Data2 from "./Data2";
 import Data3 from "./data3";
+import { onAuthStateChanged } from "firebase/auth";
+import { useSelector } from "react-redux";
 
 const Starred = () => {
   const [file2, setFile2] = useState(true);
   const [data, setData] = useState("");
   const [select, setSelect] = useState(false);
   const [showIndex, setShowIndex] = useState(null);
+  const [userId, setUserId] = useState(null);
+  const state = useSelector((store) => store.simpleState.count);
 
-  const starred = collection(db, "driveData");
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        setUserId(currentUser.uid);
+      } else {
+        console.log("No user is logged in");
+      }
+    });
+
+    return () => unsubscribe();
+  }, [auth]);
+
+  const starred = userId && collection(db, userId);
 
   async function get() {
     const data = await getDocs(starred);
@@ -25,8 +41,8 @@ const Starred = () => {
   }
 
   useEffect(() => {
-    get();
-  }, []);
+    userId && get();
+  }, [userId, state]);
 
   return (
     <>
@@ -83,21 +99,23 @@ const Starred = () => {
               <i className="material-symbols-outlined text-[18px]">more_vert</i>
             </div>
           </div>
-          {data.map((x, idx) => (
-            <Data3
-              x={x}
-              key={x.id}
-              idx={idx}
-              show={idx === showIndex ? true : false}
-              setShowIndex={setShowIndex}
-              setSelect={setSelect}
-            />
-          ))}
+          <div className=" overflow-scroll h-[550px]">
+            {data.map((x, idx) => (
+              <Data3
+                x={x}
+                key={x.id}
+                idx={idx}
+                show={idx === showIndex ? true : false}
+                setShowIndex={setShowIndex}
+                setSelect={setSelect}
+              />
+            ))}
+          </div>
         </div>
       ) : (
         <div className="pl-[20px] pt-[6px] pr-[12px] mt-[10px]">
           <h1 className="pt-[8px] pb-[16px] text-[14px] font-gr">Files</h1>
-          <div className="flex flex-wrap gap-[17px]">
+          <div className="flex flex-wrap gap-[17px] overflow-scroll h-[550px]">
             {data.map((x, idx) => (
               <Data2
                 x={x}

@@ -10,7 +10,6 @@ const Search = () => {
   const [showIndex, setShowIndex] = useState(null);
 
   const filteredData = useSelector((store) => store.search.filteredData);
-  console.log(filteredData);
 
   return (
     <>
@@ -90,14 +89,16 @@ const Search = () => {
               <i className="material-symbols-outlined text-[18px]">more_vert</i>
             </div>
           </div>
-          {filteredData.map((x, idx) => (
-            <Data3 x={x} key={x.id} idx={idx} />
-          ))}
+          <div className=" overflow-scroll h-[550px]">
+            {filteredData.map((x, idx) => (
+              <Data3 x={x} key={x.id} idx={idx} />
+            ))}
+          </div>
         </div>
       ) : (
         <div className="pl-[20px] pt-[6px] pr-[12px]">
           <h1 className="pt-[8px] pb-[16px] text-[14px] font-gr">Files</h1>
-          <div className="flex flex-wrap gap-[17px]">
+          <div className="flex flex-wrap gap-[17px] overflow-scroll h-[550px]">
             {filteredData.map((x, idx) => (
               <Data2
                 x={x}

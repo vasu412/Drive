@@ -1,22 +1,41 @@
 import { useDispatch, useSelector } from "react-redux";
 import { addDoc, collection, deleteDoc, doc } from "firebase/firestore";
-import { db } from "../config/firebase";
+import { auth, db } from "../config/firebase";
 import { add } from "../config/slices";
-
-const trashData = collection(db, "trash");
-const driveData = collection(db, "driveData");
+import { useState, useEffect } from "react";
+import { onAuthStateChanged } from "firebase/auth";
 
 const Options = ({
   setSelect,
   setShowIndex,
   setShowNotification,
   setMessage,
+  trashedData,
 }) => {
   const data = useSelector((store) => store.option.profileVal);
   const dispatch = useDispatch();
 
+  const [userId, setUserId] = useState(null);
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        setUserId(currentUser.uid);
+      } else {
+        console.log("No user is logged in");
+      }
+    });
+
+    return () => unsubscribe();
+  }, [auth]);
+
+  const trashData = userId && collection(db, "trashof" + userId);
+  const driveData = userId && collection(db, userId);
+
+  console.log(trashedData);
   async function trash() {
-    await addDoc(trashData, data);
+    !trashedData
+      ? await addDoc(trashData, data)
+      : await deleteDoc(doc(trashData, data.id));
     await deleteDoc(doc(driveData, data.id));
     setSelect(false);
     setMessage("File moved to trash");
@@ -41,7 +60,7 @@ const Options = ({
       >
         <i className="material-symbols-outlined text-[20px] ">person_add</i>
       </div>
-      <a href={data.url} target="blank">
+      <a href={data.url} download={data.name}>
         <div className="h-[32px] w-[32px] flex items-center justify-center  hover:bg-slate-200 rounded-full  transition-all delay-75 cursor-pointer">
           <i className="material-symbols-outlined text-[20px] ">open_in_new</i>
         </div>

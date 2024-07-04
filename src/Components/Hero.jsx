@@ -14,7 +14,6 @@ import Notification from "./Notification";
 const Hero = () => {
   const navigate1 = useNavigate();
   const navigate2 = useNavigate();
-  const profile = collection(db, "profile");
   const [showNotification, setShowNotification] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -31,6 +30,7 @@ const Hero = () => {
       } else {
         const data = await signInWithPopup(auth, provider);
         const user = data.user;
+        const profile = collection(db, auth.currentUser.email);
         await addDoc(profile, {
           displayName: user.displayName,
           email: user.email,
