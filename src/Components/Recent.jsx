@@ -7,6 +7,7 @@ import { db } from "../config/firebase";
 import FileOrFolder from "./fileorfolder";
 import RecentData from "./RecentData";
 import Shimmer from "./shimmer";
+import RecentData2 from "./RecentData2";
 
 const Recent = () => {
   const [file2, setFile2] = useState(true);
@@ -28,7 +29,6 @@ const Recent = () => {
     getData();
   }, []);
 
-  if (data == "") return <Shimmer />;
   return (
     <>
       <h1 className="font-gr text-[24px] pl-[20px] pt-[17px] pb-[6px]">
@@ -81,21 +81,12 @@ const Recent = () => {
           showIndex={showIndex}
         />
       ) : (
-        <div className="pl-[20px] pt-[6px] pr-[12px]">
-          <h1 className="pt-[8px] pb-[16px] text-[14px] font-gr">Files</h1>
-          <div className="flex flex-wrap gap-[17px]">
-            {data.map((x, idx) => (
-              <Data2
-                x={x}
-                key={x.id}
-                show={idx === showIndex ? true : false}
-                setShowIndex={setShowIndex}
-                setSelect={setSelect}
-                idx={idx}
-              />
-            ))}
-          </div>
-        </div>
+        <RecentData2
+          data={data}
+          setShowIndex={setShowIndex}
+          setSelect={setSelect}
+          showIndex={showIndex}
+        />
       )}
     </>
   );

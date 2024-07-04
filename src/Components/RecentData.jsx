@@ -37,7 +37,6 @@ const RecentData = ({ data, setShowIndex, setSelect, showIndex }) => {
     });
     filter1 !== [] && setTodayData(filter1);
     filter2 !== [] && setWeekData(filter2);
-    console.log(filter2, filter1);
   }, []);
 
   return (
@@ -49,7 +48,7 @@ const RecentData = ({ data, setShowIndex, setSelect, showIndex }) => {
         <div className="w-[140px] h-[30px] px-[6px]">Location</div>
       </div>
 
-      {todayData && (
+      {todayData && todayData.length !== 0 && (
         <div className="flex items-center text-start text-[14px] border-[#c7c7c7] border-0 mt-[14px] border-b-[1px] border-solid">
           <div className="w-[655px] h-[30px] pr-[6px] text-[#5e5e5e] ">
             Today
@@ -69,7 +68,7 @@ const RecentData = ({ data, setShowIndex, setSelect, showIndex }) => {
           />
         ))}
 
-      {weekData && (
+      {weekData && weekData.length !== 0 && (
         <div className="flex items-center text-start text-[14px] border-[#c7c7c7] border-0 mt-[14px] border-b-[1px] border-solid">
           <div className="w-[655px] h-[30px] pr-[6px] text-[#5e5e5e] ">
             Earlier this week
@@ -88,7 +87,7 @@ const RecentData = ({ data, setShowIndex, setSelect, showIndex }) => {
           />
         ))}
 
-      {yearData && (
+      {yearData && yearData.length !== 0 && (
         <div className="flex items-center text-start text-[14px] border-[#c7c7c7] border-0 mt-[14px] border-b-[1px] border-solid">
           <div className="w-[655px] h-[30px] pr-[6px] text-[#5e5e5e]">
             Earlier this year
