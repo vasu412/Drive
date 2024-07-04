@@ -56,6 +56,7 @@ const NavLeft = ({
       const storedFile = ref(storage, file.name);
       await uploadBytes(storedFile, file);
       const url = await getDownloadURL(storedFile);
+      console.log(url);
       setFileURL(url);
       setLoading(false);
     }

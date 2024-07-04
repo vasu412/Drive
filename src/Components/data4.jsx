@@ -6,7 +6,7 @@ import pdf from "/assets/pdf.svg";
 import { addOption } from "../config/slices";
 import { useState } from "react";
 
-const Data4 = ({ x, show, setShowIndex, setSelect, idx }) => {
+const Data4 = ({ x, show, setShowIndex, setSelect, idx, today }) => {
   const profile = useSelector((store) => store.profile.profileVal);
   const [star, setStar] = useState(x.isStarred);
 
@@ -41,7 +41,7 @@ const Data4 = ({ x, show, setShowIndex, setSelect, idx }) => {
         )}
       </div>
       <div className="w-[144px] text-[#444746] text-[13px] px-[6px]">
-        {x.lastModified}
+        {today ? x.time : x.date}
       </div>
       <div className="w-[140px]  px-[6px] flex text-[#444746] text-[13px]">
         <img

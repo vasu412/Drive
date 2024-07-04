@@ -5,7 +5,8 @@ import Data2 from "./Data2";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../config/firebase";
 import FileOrFolder from "./fileorfolder";
-import { dateString } from "../config/currDate";
+import RecentData from "./RecentData";
+import Shimmer from "./shimmer";
 
 const Recent = () => {
   const [file2, setFile2] = useState(true);
@@ -27,6 +28,7 @@ const Recent = () => {
     getData();
   }, []);
 
+  if (data == "") return <Shimmer />;
   return (
     <>
       <h1 className="font-gr text-[24px] pl-[20px] pt-[17px] pb-[6px]">
@@ -72,24 +74,12 @@ const Recent = () => {
           </p>
         </div>
       ) : file2 ? (
-        <div className="flex flex-col mt-[18px] w-full pl-[20px] pr-[12px]">
-          <div className="flex items-center text-start text-[14px] border-[#dadce0] border-0  border-b-[1px] border-solid">
-            <div className="w-[655px] h-[30px] pr-[6px] ">Name</div>
-            <div className="w-[140px] h-[30px] px-[6px]">Owner</div>
-            <div className="w-[92px] h-[30px] px-[6px]">File Size</div>
-            <div className="w-[140px] h-[30px] px-[6px]">Location</div>
-          </div>
-          {data.map((x, idx) => (
-            <Data4
-              x={x}
-              key={x.id}
-              idx={idx}
-              show={idx === showIndex ? true : false}
-              setShowIndex={setShowIndex}
-              setSelect={setSelect}
-            />
-          ))}
-        </div>
+        <RecentData
+          data={data}
+          setShowIndex={setShowIndex}
+          setSelect={setSelect}
+          showIndex={showIndex}
+        />
       ) : (
         <div className="pl-[20px] pt-[6px] pr-[12px]">
           <h1 className="pt-[8px] pb-[16px] text-[14px] font-gr">Files</h1>
