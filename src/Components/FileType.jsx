@@ -1,3 +1,4 @@
+import FileOrFolder from "./fileorfolder";
 const FileType = ({ setFile, setFile2, setFolders, file, file2 }) => {
   return (
     <div className="flex justify-between w-full mt-[17px] px-[20px]">
@@ -39,29 +40,7 @@ const FileType = ({ setFile, setFile2, setFolders, file, file2 }) => {
           </div>
         </div>
       </div>
-      <div className="border-[#202124] border border-solid w-[110px] h-[30px] rounded-3xl flex cursor-pointer">
-        <div
-          className="flex items-center w-[55px] justify-center rounded-l-2xl"
-          style={{ backgroundColor: file2 ? "#c2e7ff" : "transparent" }}
-          onClick={() => setFile2(true)}>
-          {file2 && (
-            <i className="material-symbols-outlined text-[18px]">check</i>
-          )}
-          <i className="material-symbols-outlined text-[21px]">menu</i>
-        </div>
-        <div className="h-full  border-[#202124] border-0 border-r border-solid"></div>
-        <div
-          className="flex items-center w-[55px] justify-center rounded-r-2xl"
-          style={{ backgroundColor: file2 ? "transparent" : "#c2e7ff" }}
-          onClick={() => setFile2(false)}>
-          {file2 ? (
-            ""
-          ) : (
-            <i className="material-symbols-outlined text-[18px]">check</i>
-          )}
-          <i className="material-symbols-outlined text-[18px]">view_cozy</i>
-        </div>
-      </div>
+      <FileOrFolder file2={file2} setFile2={setFile2} />
     </div>
   );
 };

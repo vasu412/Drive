@@ -1,29 +1,7 @@
-import { useEffect, useState } from "react";
-import Options from "./options";
-import Data4 from "./data4";
-import Data2 from "./Data2";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "../config/firebase";
-
+import { useState } from "react";
+import FileOrFolder from "./fileorfolder";
 const Shared = () => {
   const [file2, setFile2] = useState(true);
-  const [data, setData] = useState("");
-  const [select, setSelect] = useState(false);
-  const [showIndex, setShowIndex] = useState(null);
-
-  const driveData = collection(db, "driveData");
-  async function getData() {
-    const data = await getDocs(driveData);
-    const filteredData = data.docs.map((docs) => ({
-      ...docs.data(),
-      id: docs.id,
-    }));
-    setData([...filteredData]);
-  }
-
-  useEffect(() => {
-    getData();
-  }, []);
 
   return (
     <>
@@ -31,107 +9,41 @@ const Shared = () => {
         Shared with me
       </h1>
 
-      <div className="border-[#202124] border border-solid w-[110px] h-[30px] rounded-3xl flex cursor-pointer float-right absolute right-[80px] top-[80px]">
-        <div
-          className="flex items-center w-[55px] justify-center rounded-l-2xl"
-          style={{ backgroundColor: file2 ? "#c2e7ff" : "transparent" }}
-          onClick={() => setFile2(true)}>
-          {file2 && (
-            <i className="material-symbols-outlined text-[18px]">check</i>
-          )}
-          <i className="material-symbols-outlined text-[21px]">menu</i>
-        </div>
-        <div className="h-full  border-[#202124] border-0 border-r border-solid"></div>
-        <div
-          className="flex items-center w-[55px] justify-center rounded-r-2xl"
-          style={{ backgroundColor: file2 ? "transparent" : "#c2e7ff" }}
-          onClick={() => setFile2(false)}>
-          {file2 ? (
-            ""
-          ) : (
-            <i className="material-symbols-outlined text-[18px]">check</i>
-          )}
-          <i className="material-symbols-outlined text-[18px]">view_cozy</i>
-        </div>
+      <FileOrFolder file2={file2} setFile2={setFile2} />
+
+      <div className="ml-[20px] mt-[10px]">
+        <button className=" text-black py-[4px] pl-[19px] pr-[34px] rounded-md mr-[16px] border border-[#202124] text-[14px] relative font-gr hover:bg-slate-100">
+          Type
+          <i className=" material-icons absolute right-[15px] top-[2px] ml-[8px]">
+            arrow_drop_down
+          </i>
+        </button>
+
+        <button className="text-black py-[4px] pl-[19px] pr-[34px] rounded-md mr-[16px] border border-[#202124] text-[14px] relative font-gr hover:bg-slate-100">
+          Modified
+          <i className=" material-icons h-[20px] w-[20px] absolute right-[15px] top-[2px] ml-[8px]">
+            arrow_drop_down
+          </i>
+        </button>
       </div>
-
-      {!select ? (
-        <div className="ml-[20px] mt-[10px]">
-          <button className=" text-black py-[4px] pl-[19px] pr-[34px] rounded-md mr-[16px] border border-[#202124] text-[14px] relative font-gr hover:bg-slate-100">
-            Type
-            <i className=" material-icons absolute right-[15px] top-[2px] ml-[8px]">
-              arrow_drop_down
-            </i>
-          </button>
-
-          <button className="text-black py-[4px] pl-[19px] pr-[34px] rounded-md mr-[16px] border border-[#202124] text-[14px] relative font-gr hover:bg-slate-100">
-            Modified
-            <i className=" material-icons h-[20px] w-[20px] absolute right-[15px] top-[2px] ml-[8px]">
-              arrow_drop_down
-            </i>
-          </button>
-        </div>
-      ) : (
-        <div className="ml-[15px]">
-          <Options setSelect={setSelect} setShowIndex={setShowIndex} />
-        </div>
-      )}
-
-      {data === "" || data.length === 0 ? (
-        <div className="flex flex-col items-center">
-          <img
-            src="https://ssl.gstatic.com/docs/doclist/images/empty_state_shared_with_me.svg"
-            alt=""
-            className="h-[200px] w-[200px] mt-[140px]"
-          />
-          <h1 className="mt-[16px] mb-[8px] font-gr font-[300] text-[24px]">
-            Nothing has been shared with you yet
-          </h1>
-          <p className="font-[300] mx-[300px] text-center">
-            See all the items shared with you in one place .{" "}
-            <a
-              href="https://support.google.com/drive/answer/2375057?visit_id=638536361769983493-3865912668&p=swm_ww_new&rd=1"
-              className="text-[#1a73e8]">
-              Learn More
-            </a>
-          </p>
-        </div>
-      ) : file2 ? (
-        <div className="flex flex-col mt-[18px] w-full pl-[20px] pr-[12px]">
-          <div className="flex items-center text-start text-[14px] border-[#dadce0] border-0  border-b-[1px] border-solid">
-            <div className="w-[655px] h-[30px] pr-[6px] ">Name</div>
-            <div className="w-[140px] h-[30px] px-[6px]">Owner</div>
-            <div className="w-[92px] h-[30px] px-[6px]">File Size</div>
-            <div className="w-[140px] h-[30px] px-[6px]">Location</div>
-          </div>
-          {data.map((x, idx) => (
-            <Data4
-              x={x}
-              key={x.id}
-              idx={idx}
-              show={idx === showIndex ? true : false}
-              setShowIndex={setShowIndex}
-              setSelect={setSelect}
-            />
-          ))}
-        </div>
-      ) : (
-        <div className="pl-[20px] pt-[6px] pr-[12px]">
-          <h1 className="pt-[8px] pb-[16px] text-[14px] font-gr">Files</h1>
-          <div className="flex flex-wrap gap-[17px]">
-            {data.map((x, idx) => (
-              <Data2
-                x={x}
-                key={x.id}
-                show={idx === showIndex ? true : false}
-                setShowIndex={setShowIndex}
-                setSelect={setSelect}
-                idx={idx}
-              />
-            ))}
-          </div>
-        </div>
-      )}
+      <div className="flex flex-col items-center">
+        <img
+          src="https://ssl.gstatic.com/docs/doclist/images/empty_state_shared_with_me.svg"
+          alt=""
+          className="h-[200px] w-[200px] mt-[140px]"
+        />
+        <h1 className="mt-[16px] mb-[8px] font-gr font-[300] text-[24px]">
+          Nothing has been shared with you yet
+        </h1>
+        <p className="font-[300] mx-[300px] text-center">
+          See all the items shared with you in one place .{" "}
+          <a
+            href="https://support.google.com/drive/answer/2375057?visit_id=638536361769983493-3865912668&p=swm_ww_new&rd=1"
+            className="text-[#1a73e8]">
+            Learn More
+          </a>
+        </p>
+      </div>
     </>
   );
 };
