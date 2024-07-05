@@ -7,6 +7,7 @@ import RecentData from "./RecentData";
 import RecentData2 from "./RecentData2";
 import { onAuthStateChanged } from "firebase/auth";
 import { useSelector } from "react-redux";
+import Notification from "./Notification";
 
 const Recent = () => {
   const [file2, setFile2] = useState(true);
@@ -15,6 +16,8 @@ const Recent = () => {
   const [showIndex, setShowIndex] = useState(null);
   const [userId, setUserId] = useState(null);
   const state = useSelector((store) => store.simpleState.count);
+  const [showNotification, setShowNotification] = useState(false);
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -68,7 +71,12 @@ const Recent = () => {
         </div>
       ) : (
         <div className="ml-[15px]">
-          <Options setSelect={setSelect} setShowIndex={setShowIndex} />
+          <Options
+            setSelect={setSelect}
+            setShowIndex={setShowIndex}
+            setMessage={setMessage}
+            setShowNotification={setShowNotification}
+          />
         </div>
       )}
 
@@ -99,6 +107,13 @@ const Recent = () => {
           setShowIndex={setShowIndex}
           setSelect={setSelect}
           showIndex={showIndex}
+        />
+      )}
+      {showNotification && (
+        <Notification
+          message={message}
+          setShowNotification={setShowNotification}
+          showNotification={showNotification}
         />
       )}
     </>

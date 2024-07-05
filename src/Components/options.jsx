@@ -16,6 +16,7 @@ const Options = ({
   const dispatch = useDispatch();
 
   const [userId, setUserId] = useState(null);
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
@@ -37,10 +38,10 @@ const Options = ({
       ? await addDoc(trashData, data)
       : await deleteDoc(doc(trashData, data.id));
     await deleteDoc(doc(driveData, data.id));
+    dispatch(add(1));
     setSelect(false);
     setMessage("File moved to trash");
     setShowNotification(true);
-    dispatch(add(1));
   }
 
   return (

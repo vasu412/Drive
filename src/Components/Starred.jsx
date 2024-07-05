@@ -7,6 +7,7 @@ import Data2 from "./Data2";
 import Data3 from "./data3";
 import { onAuthStateChanged } from "firebase/auth";
 import { useSelector } from "react-redux";
+import Notification from "./Notification";
 
 const Starred = () => {
   const [file2, setFile2] = useState(true);
@@ -15,6 +16,8 @@ const Starred = () => {
   const [showIndex, setShowIndex] = useState(null);
   const [userId, setUserId] = useState(null);
   const state = useSelector((store) => store.simpleState.count);
+  const [showNotification, setShowNotification] = useState(false);
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -70,7 +73,12 @@ const Starred = () => {
         </div>
       ) : (
         <div className="ml-[15px]">
-          <Options setSelect={setSelect} setShowIndex={setShowIndex} />
+          <Options
+            setSelect={setSelect}
+            setShowIndex={setShowIndex}
+            setMessage={setMessage}
+            setShowNotification={setShowNotification}
+          />
         </div>
       )}
       {data === "" || data.length === 0 ? (
@@ -128,6 +136,13 @@ const Starred = () => {
             ))}
           </div>
         </div>
+      )}
+      {showNotification && (
+        <Notification
+          message={message}
+          setShowNotification={setShowNotification}
+          showNotification={showNotification}
+        />
       )}
     </>
   );

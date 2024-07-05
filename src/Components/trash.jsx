@@ -7,6 +7,7 @@ import Options from "./options";
 import FileOrFolder from "./fileorfolder";
 import { onAuthStateChanged } from "firebase/auth";
 import { useSelector } from "react-redux";
+import Notification from "./Notification";
 
 const Trash = () => {
   const [file2, setFile2] = useState(true);
@@ -14,6 +15,8 @@ const Trash = () => {
   const [select, setSelect] = useState(false);
   const [showIndex, setShowIndex] = useState(null);
   const state = useSelector((store) => store.simpleState.count);
+  const [showNotification, setShowNotification] = useState(false);
+  const [message, setMessage] = useState("");
 
   const [userId, setUserId] = useState(null);
   useEffect(() => {
@@ -83,6 +86,8 @@ const Trash = () => {
             setSelect={setSelect}
             setShowIndex={setShowIndex}
             trashedData={true}
+            setMessage={setMessage}
+            setShowNotification={setShowNotification}
           />
         </div>
       )}
@@ -157,6 +162,13 @@ const Trash = () => {
             ))}
           </div>
         </div>
+      )}
+      {showNotification && (
+        <Notification
+          message={message}
+          setShowNotification={setShowNotification}
+          showNotification={showNotification}
+        />
       )}
     </>
   );
