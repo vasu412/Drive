@@ -5,7 +5,6 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   onAuthStateChanged,
-  signInWithRedirect,
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { addDoc, collection } from "firebase/firestore";
@@ -84,8 +83,10 @@ const Hero = () => {
             Store, share, and collaborate on files and folders from your mobile
             device, tablet, or computer
           </p>
-          <div className="mt-[36px]" onClick={() => signInWithGoogle3("ai")}>
-            <button className="bg-[#1a73e8] text-white py-[14px] px-[24px] pr-[38px] rounded-[5px] mr-[16px]  text-[18px] relative font-gr">
+          <div className="mt-[36px]">
+            <button
+              className="bg-[#1a73e8] text-white py-[14px] px-[24px] pr-[38px] rounded-[5px] mr-[16px]  text-[18px] relative font-gr"
+              onClick={() => signInWithGoogle3()}>
               Talk to AI
               <img
                 src="/assets/sparkler.png"

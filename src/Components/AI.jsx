@@ -7,7 +7,7 @@ const AI = () => {
   const [submit, setSubmit] = useState(false);
   const [text, setText] = useState("");
   const [input, setInput] = useState("");
-  const [user, setUser] = useState("");
+  const [user, setUser] = useState(null);
 
   const profile = collection(db, "profile");
   const handleSubmit = async (e) => {
@@ -27,6 +27,7 @@ const AI = () => {
         ...docs.data(),
         id: docs.id,
       }));
+      console.log(data);
       setUser(filtereData[0]);
     }
     prof();
@@ -42,15 +43,21 @@ const AI = () => {
       <div className="text-[#e3e3e3] bg-[#131314]  w-full">
         <div className="w-[1355px] ml-[16px] mt-[12px] mb-[10px] py-[6px] flex justify-between items-center h-[58px]">
           <p className="font-gr text-[20px] px-[8px] text-[#e3e3e3]">Gemini</p>
-          <div className="h-[30px] w-[30px] m-[12px] flex items-center bg-white justify-center rounded-full cursor-pointer">
-            <img src={user.photoURL} className="rounded-full  w-[40px]"></img>
-          </div>
+          {user && (
+            <div className="h-[30px] w-[30px] m-[12px] flex items-center bg-white justify-center rounded-full cursor-pointer">
+              <img
+                src={user?.photoURL}
+                className="rounded-full  w-[40px]"></img>
+            </div>
+          )}
         </div>
         <div className="w-[1360px] h-[690px] px-[20px] pt-[16px] flex flex-col justify-between items-center">
           {!submit ? (
             <div className="w-[830px] h-[424px] flex flex-col justify-between ">
               <div className="mt-[10px] mb-[38px] text-[54px] ml-[10px]">
-                <p className="text h-[70px]">Hello, {user.displayName}</p>
+                <p className="text h-[70px]">
+                  Hello, {user && user?.displayName}
+                </p>
                 <p className="text-[#444746] font-[500]">
                   How can I help you today?
                 </p>
